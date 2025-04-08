@@ -1,0 +1,9 @@
+CREATE TABLE user_info (
+    policy_no   CHAR(12),
+    address     VARCHAR(200),
+    msg         LVARCHAR(500),
+    coverage_no smallint,
+    user_age    INT,
+    test_no     INT8,
+    face_amt    FLOAT
+)
