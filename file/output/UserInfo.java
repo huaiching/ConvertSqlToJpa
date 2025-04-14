@@ -2,6 +2,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.IdClass;
 import java.io.Serializable;
 import java.util.Objects;
@@ -13,21 +14,35 @@ public class UserInfo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @Schema(description = "保單號碼")
     @Column(name = "policy_no")
     private String policyNo;
+
+    @Schema(description = "地址")
     @Column(name = "address")
     private String address;
+
+    @Schema(description = "訊息")
     @Column(name = "msg")
     private String msg;
+
+    @Schema(description = "保障號碼")
     @Column(name = "coverage_no")
     private short coverageNo;
+
+    @Schema(description = "用戶年齡")
     @Column(name = "user_age")
     private int userAge;
+
     @Id
+    @Schema(description = "測試號碼")
     @Column(name = "test_no")
     private long testNo;
+
+    @Schema(description = "保額")
     @Column(name = "face_amt")
     private Double faceAmt;
+
 
     public UserInfo() {
     }

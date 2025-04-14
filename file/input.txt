@@ -1,9 +1,9 @@
 CREATE TABLE user_info (
-    policy_no   CHAR(12),
-    address     VARCHAR(200),
-    msg         LVARCHAR(500),
-    coverage_no smallint,
-    user_age    INT,
-    test_no     INT8,
-    face_amt    FLOAT
+    policy_no   CHAR(12),       -- 保單號碼
+    address     VARCHAR(200),   -- 地址
+    msg         LVARCHAR(500),  -- 訊息
+    coverage_no smallint,       -- 保障號碼
+    user_age    INT,            -- 用戶年齡
+    test_no     INT8,           -- 測試號碼
+    face_amt    FLOAT           -- 保額
 )

@@ -44,7 +44,14 @@ public class Application {
                     String fieldName = toCamelCase(parts[0], false);
                     String sqlType = parts[1];
                     String javaType = mapSqlType(sqlType);
-                    fields.add(new String[]{fieldName, javaType, parts[0]});
+                    // 取得 中文註解
+                    String schemaName = "";
+                    for (int i = 0; i < parts.length; i++) {
+                        if ("--".equals(parts[i])) {
+                            schemaName = parts[i+1];
+                        }
+                    }
+                    fields.add(new String[]{fieldName, javaType, parts[0], schemaName});
                 }
             }
             reader.close();
@@ -58,6 +65,7 @@ public class Application {
             entityWriter.write("import jakarta.persistence.Id;\n");
             entityWriter.write("import jakarta.persistence.Column;\n");
             entityWriter.write("import jakarta.persistence.Table;\n");
+            entityWriter.write("import io.swagger.v3.oas.annotations.media.Schema;\n");
             if (primaryKeys.size() > 1) {
                 entityWriter.write("import jakarta.persistence.IdClass;\n");
             }
@@ -81,12 +89,16 @@ public class Application {
                 String fieldName = field[0];
                 String javaType = field[1];
                 String originalName = field[2];
+                String schemaName = field[3];
                 boolean isPrimaryKey = primaryKeys.contains(originalName);
                 if (isPrimaryKey) {
                     entityWriter.write("    @Id\n");
                 }
+                if (schemaName.length() > 0) {
+                    entityWriter.write("    @Schema(description = \"" + schemaName + "\")\n");
+                }
                 entityWriter.write("    @Column(name = \"" + originalName + "\")\n");
-                entityWriter.write("    private " + javaType + " " + fieldName + ";\n");
+                entityWriter.write("    private " + javaType + " " + fieldName + ";\n\n");
             }
 
             entityWriter.write("\n");
