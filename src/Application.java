@@ -451,7 +451,7 @@ public class Application {
         if (sqlType.matches("char.*|varchar.*|lvarchar.*")) {
             return "String";
         } else if (sqlType.matches("int8")) {
-            return "long";
+            return "Long";
         } else if (sqlType.matches("int4|int|integer")) {
             return "Integer";
         } else if (sqlType.matches("smallint")) {
