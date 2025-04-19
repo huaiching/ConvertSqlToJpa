@@ -83,7 +83,7 @@ public class Application {
             new File("file/output/service/Impl").mkdirs();
 
             // 生成 Entity, Repository, service, serviceImpl 和 Controller
-            generateEntity(entityName, entityScheamName, fields, primaryKeys);
+            generateEntity(entityName, entityScheamName, fields, primaryKeys, primaryKeyExists);
             generateRepository(entityName, fields, primaryKeys);
             generateServiceInterface(entityName, fields, primaryKeys, primaryKeyExists);
             generateServiceImpl(entityName, fields, primaryKeys, primaryKeyExists);

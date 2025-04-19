@@ -20,9 +20,10 @@ public class EntityUtil {
      * @param entityScheamName 實體的中文註解（可選）
      * @param fields 欄位名稱、型別等資料
      * @param primaryKeys 主鍵集合
+     * @param primaryKeyExists 主鍵是否存在
      * @throws IOException 讀取或寫入檔案時的錯誤
      */
-    public static void generateEntity(String entityName, String entityScheamName, List<String[]> fields, Set<String> primaryKeys) throws IOException {
+    public static void generateEntity(String entityName, String entityScheamName, List<String[]> fields, Set<String> primaryKeys, Boolean primaryKeyExists) throws IOException {
         File entityFile = new File("file/output/entity/" + entityName + ".java");
         BufferedWriter entityWriter = new BufferedWriter(new FileWriter(entityFile));
 
@@ -189,6 +190,30 @@ public class EntityUtil {
             }
             entityWriter.write(");\n");
             entityWriter.write("        }\n");
+            entityWriter.write("    }\n");
+        }
+
+        // 針對無主鍵者，要生成 update 類
+        if (!primaryKeyExists) {
+            entityWriter.write("    public static class " + entityName + "Update implements Serializable {\n");
+            entityWriter.write("        private static final long serialVersionUID = 1L;\n\n");
+            entityWriter.write("        private " + entityName + " " + entityName.toLowerCase() + "Ori;\n");
+            entityWriter.write("        private " + entityName + " " + entityName.toLowerCase() + "New;\n");
+            entityWriter.write("\n");
+
+            // Key 的 getter 和 setter
+            entityWriter.write("        public " + entityName + " get" + capitalize(entityName) + "Ori() {\n");
+            entityWriter.write("            return " + entityName.toLowerCase() + "Ori;\n");
+            entityWriter.write("        }\n\n");
+            entityWriter.write("        public void set" + capitalize(entityName) + "Ori(" + entityName + " " + entityName.toLowerCase() + "Ori) {\n");
+            entityWriter.write("            this." + entityName.toLowerCase() + "Ori = " + entityName.toLowerCase() + "Ori;\n");
+            entityWriter.write("        }\n\n");
+            entityWriter.write("        public " + entityName + " get" + capitalize(entityName) + "New() {\n");
+            entityWriter.write("            return " + entityName.toLowerCase() + "New;\n");
+            entityWriter.write("        }\n\n");
+            entityWriter.write("        public void set" + capitalize(entityName) + "New(" + entityName + " " + entityName.toLowerCase() + "New) {\n");
+            entityWriter.write("            this." + entityName.toLowerCase() + "New = " + entityName.toLowerCase() + "New;\n");
+            entityWriter.write("        }\n\n");
             entityWriter.write("    }\n");
         }
 

@@ -1,6 +1,6 @@
-CREATE TABLE clnt (     -- 客戶資料檔
-    client_id   CHAR(10),    -- 客戶證號
-    names       CHAR(100),   -- 姓名
-    birth_date  CHAR(9),     -- 出生日期
-    sex         CHAR(2)      -- 性別
+CREATE TABLE benf (
+    policy_no VARCHAR(12),
+    relation  VARCHAR(1),
+    client_id VARCHAR(10),
+    names     VARCHAR(100)
 )

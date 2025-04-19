@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
+import static utils.BasicUtil.capitalize;
 import static utils.BasicUtil.toCamelCase;
 
 /**
@@ -86,12 +87,20 @@ public class ServiceUtil {
             serviceWriter.write("     */\n");
             serviceWriter.write("    List<" + entityName + "> insertAll(List<" + entityName + "> entityList);\n\n");
 
+            // update 方法
+            serviceWriter.write("    /**\n");
+            serviceWriter.write("     * 單筆更新 " + entityName.toLowerCase() + " <br/>\n");
+            serviceWriter.write("     * @param entityOri 變更前的 " + entityName.toLowerCase() + "\n");
+            serviceWriter.write("     * @param entityNew 變更後的 " + entityName.toLowerCase() + "\n");
+            serviceWriter.write("     */\n");
+            serviceWriter.write("    void update(" + entityName + " entityOri, " + entityName + " entityNew);\n\n");
+
             // deleteByEntity 方法
             serviceWriter.write("    /**\n");
             serviceWriter.write("     * 單筆刪除 " + entityName.toLowerCase() + "\n");
             serviceWriter.write("     * @param entity 要刪除的 " + entityName.toLowerCase() + "\n");
             serviceWriter.write("     */\n");
-            serviceWriter.write("    void deleteByEntity(" + entityName + " entity);\n\n");
+            serviceWriter.write("    void deleteByEntity(" + primaryKeyType + " entity);\n\n");
         }
 
         serviceWriter.write("}\n");
@@ -121,7 +130,10 @@ public class ServiceUtil {
         implWriter.write("import org.springframework.stereotype.Service;\n");
         implWriter.write("import org.springframework.beans.factory.annotation.Autowired;\n");
         implWriter.write("import org.springframework.transaction.annotation.Transactional;\n");
-        implWriter.write("import java.util.List;\n");
+        if (!primaryKeyExists) {
+            implWriter.write("import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;\n");
+        }
+        implWriter.write("import java.util.*;\n");
         implWriter.write("\n");
         implWriter.write("@Service\n");
         implWriter.write("public class " + entityName + "ServiceImpl implements " + entityName + "Service {\n");
@@ -181,8 +193,11 @@ public class ServiceUtil {
             implWriter.write("            " + entityName.toLowerCase() + "Repository.deleteById(id);\n");
             implWriter.write("        }\n");
             implWriter.write("    }\n");
-
         } else {
+            // 額外的 Repository 注入
+            implWriter.write("    @Autowired\n");
+            implWriter.write("    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;\n\n");
+
             // insert 方法實作
             implWriter.write("    /**\n");
             implWriter.write("     * 單筆新增 " + entityName.toLowerCase() + " <br/>\n");
@@ -207,6 +222,47 @@ public class ServiceUtil {
             implWriter.write("        return " + entityName.toLowerCase() + "Repository.saveAll(entityList);\n");
             implWriter.write("    }\n\n");
 
+            // update 方法
+            implWriter.write("    /**\n");
+            implWriter.write("     * 單筆更新 " + entityName.toLowerCase() + " <br/>\n");
+            implWriter.write("     * @param entityOri 變更前的 " + entityName.toLowerCase() + "\n");
+            implWriter.write("     * @param entityNew 變更後的 " + entityName.toLowerCase() + "\n");
+            implWriter.write("     */\n");
+            implWriter.write("    public void update(" + entityName + " entityOri, " + entityName + " entityNew) {\n");
+            implWriter.write("        // 建立 SQL\n");
+            implWriter.write("        String sql = \"UPDATE " + entityName.toLowerCase() + " \" +\n");
+            for (int i = 0; i < fields.size(); i++) {
+                String[] field = fields.get(i);
+                if (i == 0) {
+                    implWriter.write("                     \"SET " + field[2] + " = :" + field[0] + "New \" +\n");
+                } else {
+                    implWriter.write("                     \"   ," + field[2] + " = :" + field[0] + "New \" +\n");
+                }
+            }
+            for (int i = 0; i < fields.size(); i++) {
+                String[] field = fields.get(i);
+                if (i == 0) {
+                    implWriter.write("                     \"WHERE " + field[2] + " = :" + field[0] + "Ori \" +\n");
+                } else if (i == fields.size() - 1) {
+                    implWriter.write("                     \"  AND " + field[2] + " = :" + field[0] + "Ori \";\n");
+                } else {
+                    implWriter.write("                     \"  AND " + field[2] + " = :" + field[0] + "Ori \" + \n");
+                }
+            }
+            implWriter.write("        // 填入 參數\n");
+            implWriter.write("        Map<String, Object> params = new HashMap<>();\n");
+            for (int i = 0; i < fields.size(); i++) {
+                String[] field = fields.get(i);
+                implWriter.write("        params.put(\"" + field[0] + "New\", entityNew.get" + capitalize(field[0]) + "());\n");
+            }
+            for (int i = 0; i < fields.size(); i++) {
+                String[] field = fields.get(i);
+                implWriter.write("        params.put(\"" + field[0] + "Ori\", entityOri.get" + capitalize(field[0]) + "());\n");
+            }
+            implWriter.write("        // 執行 方法\n");
+            implWriter.write("        namedParameterJdbcTemplate.update(sql, params);\n");
+            implWriter.write("    }\n\n");
+
             // deleteByEntity 方法實作
             implWriter.write("    /**\n");
             implWriter.write("     * 單筆刪除 " + entityName.toLowerCase() + "\n");
@@ -214,7 +270,7 @@ public class ServiceUtil {
             implWriter.write("     */\n");
             implWriter.write("    @Override\n");
             implWriter.write("    @Transactional\n");
-            implWriter.write("    public void deleteByEntity(" + entityName + " entity) {\n");
+            implWriter.write("    public void deleteByEntity(" + primaryKeyType + " entity) {\n");
             implWriter.write("        if (" + entityName.toLowerCase() + "Repository.existsById(entity)) {\n");
             implWriter.write("            " + entityName.toLowerCase() + "Repository.deleteById(entity);\n");
             implWriter.write("        }\n");
