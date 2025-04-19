@@ -276,7 +276,7 @@ public class Application {
         BufferedWriter repoWriter = new BufferedWriter(new FileWriter(repoFile));
 
         // 檢查主鍵的型態
-        String idType = primaryKeys.size() > 1 ? entityName + "." + entityName + "Key" : fields.stream()
+        String primaryKeyType = primaryKeys.size() > 1 ? entityName + "." + entityName + "Key" : fields.stream()
                 .filter(f -> primaryKeys.contains(f[2]))
                 .findFirst()
                 .map(f -> f[1])
@@ -284,12 +284,13 @@ public class Application {
 
         repoWriter.write("import org.springframework.data.jpa.repository.JpaRepository;\n");
         repoWriter.write("\n");
-        repoWriter.write("public interface " + entityName + "Repository extends JpaRepository<" + entityName + ", " + idType + "> {\n");
+        repoWriter.write("public interface " + entityName + "Repository extends JpaRepository<" + entityName + ", " + primaryKeyType + "> {\n");
         repoWriter.write("}\n");
 
         repoWriter.close();
         System.out.println("生成 Repository 檔案，位於 " + "file/output/repository/" + entityName + "Repository.java");
     }
+
     /**
      * 建立 service 介面，定義 CRUD 操作的抽象方法
      * @param entityName 實體名稱 (如：User)
