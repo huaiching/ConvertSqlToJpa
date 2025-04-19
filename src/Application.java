@@ -107,13 +107,10 @@ public class Application {
         entityWriter.write("\n");
 
         // 根據是否有複合主鍵來決定@Entity 和 @IdClass 的使用
+        entityWriter.write("@Entity\n");
+        entityWriter.write("@Table(name = \"" + toCamelCase(entityName, true).toLowerCase() + "\")\n");
         if (primaryKeys.size() > 1) {
-            entityWriter.write("@Entity\n");
-            entityWriter.write("@Table(name = \"" + toCamelCase(entityName, true).toLowerCase() + "\")\n");
             entityWriter.write("@IdClass(" + entityName + "." + entityName + "Key.class)\n"); // 使用內部類別 Key
-        } else {
-            entityWriter.write("@Entity\n");
-            entityWriter.write("@Table(name = \"" + toCamelCase(entityName, true).toLowerCase() + "\")\n");
         }
         if (entityScheamName.length() > 0) {
             entityWriter.write("@Schema(description = \"" + entityScheamName + "\")\n");
@@ -157,7 +154,6 @@ public class Application {
             } else {
                 entityWriter.write("        return " + fieldName + ";\n");
             }
-//            entityWriter.write("        return " + fieldName + ";\n");
 
             entityWriter.write("    }\n\n");
             // Setter
