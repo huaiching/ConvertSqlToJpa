@@ -1,8 +1,10 @@
 import java.io.*;
-import java.util.*;
-import java.util.regex.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-public class Application {
+public class Application2 {
     public static void main(String[] args) {
         try {
             File inputFile = new File("file/input.txt");
@@ -307,7 +309,6 @@ public class Application {
         controllerWriter.write("import io.swagger.v3.oas.annotations.Operation;\n");
         controllerWriter.write("import io.swagger.v3.oas.annotations.tags.Tag;\n");
         controllerWriter.write("import io.swagger.v3.oas.annotations.Parameter;\n");
-        controllerWriter.write("import java.util.List;\n");
         controllerWriter.write("\n");
 
         controllerWriter.write("@RestController\n");
@@ -316,79 +317,104 @@ public class Application {
         controllerWriter.write("public class " + entityName + "Controller {\n");
         // Logger 定義
         controllerWriter.write("    private Logger logger = LoggerFactory.getLogger(this.getClass());\n\n");
-
-        // 設定 @Autowired
-        controllerWriter.write("    @Autowired\n");
-        controllerWriter.write("    private " + entityName + "Repository " + toCamelCase(entityName, false) + "Repository;\n");
         controllerWriter.write("\n");
 
-        // 設定 主鍵
-        String primaryKeyType = "";
+        // 依據主鍵數量決定方法簽名
         if (primaryKeys.size() == 1) {
-            primaryKeyType = fields.stream()
-                .filter(f -> primaryKeys.contains(f[2]))
-                .findFirst()
-                .map(f -> f[1])
-                .orElse("Integer"); // 預設 Integer
-        } else {
-            primaryKeyType = entityName + "." + entityName + "Key";
-        }
+            // 單主鍵的情況
+            controllerWriter.write("    @Autowired\n");
+            controllerWriter.write("    private " + entityName + "Repository " + toCamelCase(entityName, false) + "Repository;\n");
+            controllerWriter.write("\n");
 
-        // 設定 seve
-        controllerWriter.write("    @Operation(summary = \"根據主鍵 新增或更新 " + entityName + "\",\n");
-        controllerWriter.write("               description = \"根據主鍵，若有資料則更新，無資料則新增\",\n");
-        controllerWriter.write("               operationId = \"save\")\n");
-        controllerWriter.write("    @PostMapping(\"/save\")\n");
-        controllerWriter.write("    public ResponseEntity<" + entityName + "> save(@RequestBody " + entityName + " entity) {\n");
-        controllerWriter.write("        " + entityName + " savedEntity = " + entityName.toLowerCase() + "Repository.save(entity);\n");
-        controllerWriter.write("        return ResponseEntity.ok(savedEntity);\n");
-        controllerWriter.write("    }\n\n");
+            String primaryKeyType = fields.stream()
+                    .filter(f -> primaryKeys.contains(f[2]))
+                    .findFirst()
+                    .map(f -> f[1])
+                    .orElse("Integer"); // 預設 Integer
 
-        // 設定 seveAll
-        controllerWriter.write("    @Operation(summary = \"根據主鍵 大量 新增或更新 " + entityName + "\",\n");
-        controllerWriter.write("               description = \"根據主鍵，若有資料則更新，無資料則新增\",\n");
-        controllerWriter.write("               operationId = \"saveAll\")\n");
-        controllerWriter.write("    @PostMapping(\"/saveAll\")\n");
-        controllerWriter.write("    public ResponseEntity<List<" + entityName + ">> saveAll(@RequestBody List<" + entityName + "> entityList) {\n");
-        controllerWriter.write("        List<" + entityName + "> savedEntityList = " + entityName.toLowerCase() + "Repository.saveAll(entityList);\n");
-        controllerWriter.write("        return ResponseEntity.ok(savedEntityList);\n");
-        controllerWriter.write("    }\n\n");
+            controllerWriter.write("    @Operation(summary = \"根據主鍵 新增或更新 " + entityName + "\",\n");
+            controllerWriter.write("               description = \"根據主鍵，若有資料則更新，無資料則新增\",\n");
+            controllerWriter.write("               operationId = \"save\")\n");
+            controllerWriter.write("    @PostMapping(\"/save\")\n");
+            controllerWriter.write("    public ResponseEntity<" + entityName + "> save(@RequestBody " + entityName + " entity) {\n");
+            controllerWriter.write("        " + entityName + " savedEntity = " + toCamelCase(entityName, false) + "Repository.save(entity);\n");
+            controllerWriter.write("        return ResponseEntity.ok(savedEntity);\n");
+            controllerWriter.write("    }\n");
 
-        // 設定 findById
-        controllerWriter.write("    @Operation(summary = \"根據主鍵 查詢 " + entityName + "\",\n");
-        controllerWriter.write("               description = \"根據主鍵查詢 " + entityName + " 資料\",\n");
-        controllerWriter.write("               operationId = \"findById\")\n");
-        if (primaryKeys.size() == 1) {
+            controllerWriter.write("\n");
+            controllerWriter.write("    @Operation(summary = \"根據主鍵 查詢 " + entityName + "\",\n");
+            controllerWriter.write("               description = \"根據主鍵查詢 " + entityName + " 資料\",\n");
+            controllerWriter.write("               operationId = \"findById\")\n");
             controllerWriter.write("    @GetMapping(\"/{id}\")\n");
-            controllerWriter.write("    public ResponseEntity<" + entityName + "> findById(@Parameter(description = \"主鍵\") @PathVariable(\"id\") " + primaryKeyType + " id) {\n");
-        } else {
-            controllerWriter.write("    @PostMapping(\"/getByIds\")\n");
-            controllerWriter.write("    public ResponseEntity<" + entityName + "> getByIds(@RequestBody " + primaryKeyType + " id) {\n");
-        }
-        controllerWriter.write("        " + entityName + " entity = " + entityName.toLowerCase() + "Repository.findById(id).orElse(null);\n");
-        controllerWriter.write("        if (entity == null) {\n");
-        controllerWriter.write("            return ResponseEntity.ok(null); // 回傳 HTTP 200 OK 且 資料為 null\n");
-        controllerWriter.write("        }\n");
-        controllerWriter.write("        return ResponseEntity.ok(entity);  // 回傳 HTTP 200 OK 和資料\n");
-        controllerWriter.write("    }\n\n");
+            controllerWriter.write("    public ResponseEntity<" + entityName + "> findById(\n");
+            controllerWriter.write("        @Parameter(description = \"主鍵\") @PathVariable(\"id\") " + primaryKeyType + " id) {\n");
+            controllerWriter.write("        " + entityName + " entity = " + entityName.toLowerCase() + "Repository.findById(id)\n");
+            controllerWriter.write("            .orElse(null);\n");
+            controllerWriter.write("        if (entity == null) {\n");
+            controllerWriter.write("            return ResponseEntity.ok().build();\n");
+            controllerWriter.write("        }\n");
+            controllerWriter.write("        return ResponseEntity.ok(entity);  // 回傳 HTTP 200 OK 和資料\n");
+            controllerWriter.write("    }\n\n");
 
-        // 設定 deleteById
-        controllerWriter.write("    @Operation(summary = \"根據主鍵 刪除 " + entityName + " 資料\",\n");
-        controllerWriter.write("               description = \"根據主鍵刪除 " + entityName + " 資料\",\n");
-        controllerWriter.write("               operationId = \"deleteById\")\n");
-        if (primaryKeys.size() == 1) {
+            // Delete (單主鍵)
+            controllerWriter.write("    @Operation(summary = \"根據主鍵 刪除 " + entityName + " 資料\",\n");
+            controllerWriter.write("               description = \"根據主鍵刪除 " + entityName + " 資料\",\n");
+            controllerWriter.write("               operationId = \"deleteById\")\n");
             controllerWriter.write("    @DeleteMapping(\"/{id}\")\n");
-            controllerWriter.write("    public ResponseEntity<Void> deleteById(@Parameter(description = \"主鍵\") @PathVariable(\"id\") " + primaryKeyType + " id) {\n");
+            controllerWriter.write("    public ResponseEntity<Void> deleteById(\n");
+            controllerWriter.write("        @Parameter(description = \"主鍵\") @PathVariable(\"id\") " + primaryKeyType + " id) {\n");
+            controllerWriter.write("        if (" + entityName.toLowerCase() + "Repository.existsById(id)) {\n");
+            controllerWriter.write("            " + entityName.toLowerCase() + "Repository.deleteById(id);\n");
+            controllerWriter.write("            return ResponseEntity.ok(null); // 回傳 HTTP 200 OK 且 資料為 null\n");
+            controllerWriter.write("        }\n");
+            controllerWriter.write("        return ResponseEntity.ok().build();  // 回傳 HTTP 200 OK 和資料\n");
+            controllerWriter.write("    }\n\n");
         } else {
-            controllerWriter.write("    @PostMapping(\"/delete\")\n");
-            controllerWriter.write("    public ResponseEntity<Void> delete(@RequestBody " + primaryKeyType + " id)) {\n");
-        }
-        controllerWriter.write("        if (" + entityName.toLowerCase() + "Repository.existsById(id)) {\n");
-        controllerWriter.write("            " + entityName.toLowerCase() + "Repository.deleteById(id);\n");
-        controllerWriter.write("        }\n");
-        controllerWriter.write("        return ResponseEntity.ok().build();\n");
-        controllerWriter.write("    }\n");
+            // 多主鍵的情況
+            controllerWriter.write("    @Autowired\n");
+            controllerWriter.write("    private " + entityName + "Repository " + toCamelCase(entityName, false) + "Repository;\n");
+            controllerWriter.write("\n");
 
+            // 使用複合主鍵類型
+            String idType = entityName + "." + entityName + "Key"; // 假設複合主鍵類型為 Key
+
+            controllerWriter.write("    @Operation(summary = \"根據主鍵 新增或更新 " + entityName + "\",\n");
+            controllerWriter.write("               description = \"根據主鍵，若有資料則更新，無資料則新增\",\n");
+            controllerWriter.write("               operationId = \"save\")\n");
+            controllerWriter.write("    @PostMapping(\"/save\")\n");
+            controllerWriter.write("    public ResponseEntity<" + entityName + "> save(@RequestBody " + entityName + " entity) {\n");
+            controllerWriter.write("        " + entityName + " savedEntity = " + toCamelCase(entityName, false) + "Repository.save(entity);\n");
+            controllerWriter.write("        return ResponseEntity.ok(savedEntity);\n");
+            controllerWriter.write("    }\n");
+
+            controllerWriter.write("\n");
+            controllerWriter.write("    @Operation(summary = \"根據主鍵 查詢 " + entityName + "\",\n");
+            controllerWriter.write("               description = \"根據主鍵查詢 " + entityName + " 資料\",\n");
+            controllerWriter.write("               operationId = \"findById\")\n");
+            controllerWriter.write("    @PostMapping(\"/getByIds\")\n");
+            controllerWriter.write("    public ResponseEntity<" + entityName + "> getByIds(@RequestBody " + idType + " key) {\n");
+            controllerWriter.write("        " + entityName + " entity = " + toCamelCase(entityName, false) + "Repository.findById(key)\n");
+            controllerWriter.write("            .orElse(null);\n");
+            controllerWriter.write("        if (entity == null) {\n");
+            controllerWriter.write("            return ResponseEntity.ok(null); // 回傳 HTTP 200 OK 且 資料為 null\n");
+            controllerWriter.write("        }\n");
+            controllerWriter.write("        return ResponseEntity.ok(entity);  // 回傳 HTTP 200 OK 和資料\n");
+            controllerWriter.write("    }\n\n");
+
+
+            controllerWriter.write("\n");
+
+            controllerWriter.write("    @Operation(summary = \"根據主鍵 刪除 " + entityName + " 資料\",\n");
+            controllerWriter.write("               description = \"根據主鍵刪除 " + entityName + " 資料\",\n");
+            controllerWriter.write("               operationId = \"deleteById\")\n");
+            controllerWriter.write("    @PostMapping(\"/delete\")\n");
+            controllerWriter.write("    public ResponseEntity<Void> delete(@RequestBody " + idType + " key) {\n");
+            controllerWriter.write("        if(" + toCamelCase(entityName, false) + "Repository.existsById(key)) {\n");
+            controllerWriter.write("            " + toCamelCase(entityName, false) + "Repository.deleteById(key);\n");
+            controllerWriter.write("        }\n");
+            controllerWriter.write("        return ResponseEntity.ok().build();\n");
+            controllerWriter.write("    }\n");
+        }
 
         controllerWriter.write("}\n");
         controllerWriter.close();
