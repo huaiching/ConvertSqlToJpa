@@ -39,6 +39,8 @@ public class BenfServiceImpl implements BenfService {
      * @param entityOri 變更前的 benf
      * @param entityNew 變更後的 benf
      */
+    @Override
+    @Transactional
     public void update(Benf entityOri, Benf entityNew) {
         // 建立 SQL
         String sql = "UPDATE benf " +

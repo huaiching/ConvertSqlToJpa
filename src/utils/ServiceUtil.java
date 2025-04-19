@@ -228,6 +228,8 @@ public class ServiceUtil {
             implWriter.write("     * @param entityOri 變更前的 " + entityName.toLowerCase() + "\n");
             implWriter.write("     * @param entityNew 變更後的 " + entityName.toLowerCase() + "\n");
             implWriter.write("     */\n");
+            implWriter.write("    @Override\n");
+            implWriter.write("    @Transactional\n");
             implWriter.write("    public void update(" + entityName + " entityOri, " + entityName + " entityNew) {\n");
             implWriter.write("        // 建立 SQL\n");
             implWriter.write("        String sql = \"UPDATE " + entityName.toLowerCase() + " \" +\n");
