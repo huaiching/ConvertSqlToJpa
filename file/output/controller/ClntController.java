@@ -15,14 +15,14 @@ public class ClntController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private ClntRepository clntRepository;
+    private ClntService clntService;
 
     @Operation(summary = "根據主鍵 新增或更新 Clnt",
                description = "根據主鍵，若有資料則更新，無資料則新增",
                operationId = "save")
     @PostMapping("/save")
     public ResponseEntity<Clnt> save(@RequestBody Clnt entity) {
-        Clnt savedEntity = clntRepository.save(entity);
+        Clnt savedEntity = clntService.save(entity);
         return ResponseEntity.ok(savedEntity);
     }
 
@@ -31,7 +31,7 @@ public class ClntController {
                operationId = "saveAll")
     @PostMapping("/saveAll")
     public ResponseEntity<List<Clnt>> saveAll(@RequestBody List<Clnt> entityList) {
-        List<Clnt> savedEntityList = clntRepository.saveAll(entityList);
+        List<Clnt> savedEntityList = clntService.saveAll(entityList);
         return ResponseEntity.ok(savedEntityList);
     }
 
@@ -40,7 +40,7 @@ public class ClntController {
                operationId = "findById")
     @GetMapping("/{id}")
     public ResponseEntity<Clnt> findById(@Parameter(description = "主鍵") @PathVariable("id") String id) {
-        Clnt entity = clntRepository.findById(id).orElse(null);
+        Clnt entity = clntService.findById(id);
         if (entity == null) {
             return ResponseEntity.ok(null); // 回傳 HTTP 200 OK 且 資料為 null
         }
@@ -52,9 +52,7 @@ public class ClntController {
                operationId = "deleteById")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@Parameter(description = "主鍵") @PathVariable("id") String id) {
-        if (clntRepository.existsById(id)) {
-            clntRepository.deleteById(id);
-        }
+        clntService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 }
