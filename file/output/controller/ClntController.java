@@ -38,8 +38,8 @@ public class ClntController {
     @Operation(summary = "根據主鍵 查詢 Clnt",
                description = "根據主鍵查詢 Clnt 資料",
                operationId = "findById")
-    @GetMapping("/{id}")
-    public ResponseEntity<Clnt> findById(@Parameter(description = "主鍵") @PathVariable("id") String id) {
+    @PostMapping("/getByIds")
+    public ResponseEntity<Clnt> getByIds(@RequestBody Clnt.ClntKey id) {
         Clnt entity = clntService.findById(id);
         if (entity == null) {
             return ResponseEntity.ok(null); // 回傳 HTTP 200 OK 且 資料為 null
@@ -50,8 +50,8 @@ public class ClntController {
     @Operation(summary = "根據主鍵 刪除 Clnt 資料",
                description = "根據主鍵刪除 Clnt 資料",
                operationId = "deleteById")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@Parameter(description = "主鍵") @PathVariable("id") String id) {
+    @PostMapping("/delete")
+    public ResponseEntity<Void> delete(@RequestBody Clnt.ClntKey id) {
         clntService.deleteById(id);
         return ResponseEntity.ok().build();
     }

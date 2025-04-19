@@ -18,9 +18,10 @@ public class ControllerUtil {
      * @param entityName 實體名稱 (如：User)
      * @param fields 欄位名稱、型別等資料
      * @param primaryKeys 主鍵集合
+     * @param primaryKeyExists 主鍵是否存在
      * @throws IOException 讀取或寫入檔案時的錯誤
      */
-    public static void generateController(String entityName, List<String[]> fields, Set<String> primaryKeys) throws IOException {
+    public static void generateController(String entityName, List<String[]> fields, Set<String> primaryKeys, Boolean primaryKeyExists) throws IOException {
         File controllerFile = new File("file/output/controller/" + entityName + "Controller.java");
         BufferedWriter controllerWriter = new BufferedWriter(new FileWriter(controllerFile));
 

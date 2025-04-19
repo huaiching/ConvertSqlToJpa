@@ -9,47 +9,36 @@ public class ClntServiceImpl implements ClntService {
     private ClntRepository clntRepository;
 
     /**
-     * 根據主鍵 新增或更新 clnt <br/>
-     * 若有資料則更新，無資料則新增
-     * @param entity 要新增或更新的 clnt
+     * 單筆新增 clnt <br/>
+     * @param entity 要新增的 clnt
      * @return 儲存後的實體物件
      */
     @Override
     @Transactional
-    public Clnt save(Clnt entity) {
+    public Clnt insert(Clnt entity) {
         return clntRepository.save(entity);
     }
 
     /**
-     * 根據主鍵 大量 新增或更新 clnt <br/>
-     * 若有資料則更新，無資料則新增
-     * @param entityList 要新增或更新的 clnt 清單
+     * 多筆新增 clnt <br/>
+     * @param entityList 要新增的 clnt 清單
      * @return 儲存後的實體物件清單
      */
     @Override
     @Transactional
-    public List<Clnt> saveAll(List<Clnt> entityList) {
+    public List<Clnt> insertAll(List<Clnt> entityList) {
         return clntRepository.saveAll(entityList);
     }
 
     /**
-     * 根據主鍵 查詢 clnt
-     * @param id 主鍵值
-     * @return 查詢到的實體物件，若無則返回 null
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Clnt findById(String id) {
-        return clntRepository.findById(id).orElse(null);
-    }
-
-    /**
-     * 根據主鍵 刪除 clnt
-     * @param id 主鍵值
+     * 單筆刪除 clnt
+     * @param entity 要刪除的 clnt
      */
     @Override
     @Transactional
-    public void deleteById(String id) {
-        clntRepository.deleteById(id);
+    public void deleteByEntity(Clnt entity) {
+        if (clntRepository.existsById(entity)) {
+            clntRepository.deleteById(entity);
+        }
     }
 }

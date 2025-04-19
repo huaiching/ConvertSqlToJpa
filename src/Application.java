@@ -30,6 +30,7 @@ public class Application {
                 }
                 pkReader.close();
             }
+            Boolean primaryKeyExists = primaryKeys.size() > 0 ? true : false;
 
             // 讀取 input.txt
             BufferedReader reader = new BufferedReader(new FileReader(inputFile));
@@ -66,30 +67,27 @@ public class Application {
                         }
                     }
                     fields.add(new String[]{fieldName, javaType, parts[0], schemaName});
+                    // 針對無主鍵者，所有欄位都變成主鍵
+                    if (!primaryKeyExists) {
+                        primaryKeys.add(parts[0].trim());
+                    }
                 }
             }
             reader.close();
 
-            if (primaryKeys.size() > 0) {
-                /**
-                 * 有主健 生成 JPA 相關程式
-                 */
-                // 生成 資料夾
-                new File("file/output/entity").mkdirs();
-                new File("file/output/repository").mkdirs();
-                new File("file/output/controller").mkdirs();
-                new File("file/output/service").mkdirs();
-                new File("file/output/service/Impl").mkdirs();
+            // 生成 資料夾
+            new File("file/output/entity").mkdirs();
+            new File("file/output/repository").mkdirs();
+            new File("file/output/controller").mkdirs();
+            new File("file/output/service").mkdirs();
+            new File("file/output/service/Impl").mkdirs();
 
-                // 生成 Entity, Repository, service, serviceImpl 和 Controller
-                generateEntity(entityName, entityScheamName, fields, primaryKeys);
-                generateRepository(entityName, fields, primaryKeys);
-                generateServiceInterface(entityName, fields, primaryKeys);
-                generateServiceImpl(entityName, fields, primaryKeys);
-                generateController(entityName, fields, primaryKeys);
-            } else {
-                System.out.println("無主鍵，不執行!!");
-            }
+            // 生成 Entity, Repository, service, serviceImpl 和 Controller
+            generateEntity(entityName, entityScheamName, fields, primaryKeys);
+            generateRepository(entityName, fields, primaryKeys);
+            generateServiceInterface(entityName, fields, primaryKeys, primaryKeyExists);
+            generateServiceImpl(entityName, fields, primaryKeys, primaryKeyExists);
+            generateController(entityName, fields, primaryKeys, primaryKeyExists);
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -18,9 +18,10 @@ public class ServiceUtil {
      * @param entityName 實體名稱 (如：User)
      * @param fields 欄位名稱、型別等資料
      * @param primaryKeys 主鍵集合
+     * @param primaryKeyExists 主鍵是否存在
      * @throws IOException 讀取或寫入檔案時的錯誤
      */
-    public static void generateServiceInterface(String entityName, List<String[]> fields, Set<String> primaryKeys) throws IOException {
+    public static void generateServiceInterface(String entityName, List<String[]> fields, Set<String> primaryKeys, Boolean primaryKeyExists) throws IOException {
         File serviceFile = new File("file/output/service/" + entityName + "Service.java");
         BufferedWriter serviceWriter = new BufferedWriter(new FileWriter(serviceFile));
 
@@ -35,38 +36,63 @@ public class ServiceUtil {
         serviceWriter.write("\n");
         serviceWriter.write("public interface " + entityName + "Service {\n");
 
-        // save 方法
-        serviceWriter.write("    /**\n");
-        serviceWriter.write("     * 根據主鍵 新增或更新 " + entityName.toLowerCase() + " <br/>\n");
-        serviceWriter.write("     * 若有資料則更新，無資料則新增\n");
-        serviceWriter.write("     * @param entity 要新增或更新的 " + entityName.toLowerCase() + "\n");
-        serviceWriter.write("     * @return 儲存後的實體物件\n");
-        serviceWriter.write("     */\n");
-        serviceWriter.write("    " + entityName + " save(" + entityName + " entity);\n\n");
+        if (primaryKeyExists) {
+            // save 方法
+            serviceWriter.write("    /**\n");
+            serviceWriter.write("     * 根據主鍵 新增或更新 " + entityName.toLowerCase() + " <br/>\n");
+            serviceWriter.write("     * 若有資料則更新，無資料則新增\n");
+            serviceWriter.write("     * @param entity 要新增或更新的 " + entityName.toLowerCase() + "\n");
+            serviceWriter.write("     * @return 儲存後的實體物件\n");
+            serviceWriter.write("     */\n");
+            serviceWriter.write("    " + entityName + " save(" + entityName + " entity);\n\n");
 
-        // saveAll 方法
-        serviceWriter.write("    /**\n");
-        serviceWriter.write("     * 根據主鍵 大量 新增或更新 " + entityName.toLowerCase() + " <br/>\n");
-        serviceWriter.write("     * 若有資料則更新，無資料則新增\n");
-        serviceWriter.write("     * @param entityList 要新增或更新的 " + entityName.toLowerCase() + " 清單\n");
-        serviceWriter.write("     * @return 儲存後的實體物件清單\n");
-        serviceWriter.write("     */\n");
-        serviceWriter.write("    List<" + entityName + "> saveAll(List<" + entityName + "> entityList);\n\n");
+            // saveAll 方法
+            serviceWriter.write("    /**\n");
+            serviceWriter.write("     * 根據主鍵 大量 新增或更新 " + entityName.toLowerCase() + " <br/>\n");
+            serviceWriter.write("     * 若有資料則更新，無資料則新增\n");
+            serviceWriter.write("     * @param entityList 要新增或更新的 " + entityName.toLowerCase() + " 清單\n");
+            serviceWriter.write("     * @return 儲存後的實體物件清單\n");
+            serviceWriter.write("     */\n");
+            serviceWriter.write("    List<" + entityName + "> saveAll(List<" + entityName + "> entityList);\n\n");
 
-        // findById 方法
-        serviceWriter.write("    /**\n");
-        serviceWriter.write("     * 根據主鍵 查詢 " + entityName.toLowerCase() + "\n");
-        serviceWriter.write("     * @param id 主鍵值\n");
-        serviceWriter.write("     * @return 查詢到的實體物件，若無則返回 null\n");
-        serviceWriter.write("     */\n");
-        serviceWriter.write("    " + entityName + " findById(" + primaryKeyType + " id);\n\n");
+            // findById 方法
+            serviceWriter.write("    /**\n");
+            serviceWriter.write("     * 根據主鍵 查詢 " + entityName.toLowerCase() + "\n");
+            serviceWriter.write("     * @param id 主鍵值\n");
+            serviceWriter.write("     * @return 查詢到的實體物件，若無則返回 null\n");
+            serviceWriter.write("     */\n");
+            serviceWriter.write("    " + entityName + " findById(" + primaryKeyType + " id);\n\n");
 
-        // deleteById 方法
-        serviceWriter.write("    /**\n");
-        serviceWriter.write("     * 根據主鍵 刪除 " + entityName.toLowerCase() + "\n");
-        serviceWriter.write("     * @param id 主鍵值\n");
-        serviceWriter.write("     */\n");
-        serviceWriter.write("    void deleteById(" + primaryKeyType + " id);\n");
+            // deleteById 方法
+            serviceWriter.write("    /**\n");
+            serviceWriter.write("     * 根據主鍵 刪除 " + entityName.toLowerCase() + "\n");
+            serviceWriter.write("     * @param id 主鍵值\n");
+            serviceWriter.write("     */\n");
+            serviceWriter.write("    void deleteById(" + primaryKeyType + " id);\n");
+        } else {
+            // insert 方法
+            serviceWriter.write("    /**\n");
+            serviceWriter.write("     * 單筆新增 " + entityName.toLowerCase() + " <br/>\n");
+            serviceWriter.write("     * @param entity 要新增的 " + entityName.toLowerCase() + "\n");
+            serviceWriter.write("     * @return 儲存後的實體物件\n");
+            serviceWriter.write("     */\n");
+            serviceWriter.write("    " + entityName + " insert(" + entityName + " entity);\n\n");
+
+            // insertAll 方法
+            serviceWriter.write("    /**\n");
+            serviceWriter.write("     * 多筆新增 " + entityName.toLowerCase() + " <br/>\n");
+            serviceWriter.write("     * @param entityList 要新增的 " + entityName.toLowerCase() + " 清單\n");
+            serviceWriter.write("     * @return 儲存後的實體物件清單\n");
+            serviceWriter.write("     */\n");
+            serviceWriter.write("    List<" + entityName + "> insertAll(List<" + entityName + "> entityList);\n\n");
+
+            // deleteByEntity 方法
+            serviceWriter.write("    /**\n");
+            serviceWriter.write("     * 單筆刪除 " + entityName.toLowerCase() + "\n");
+            serviceWriter.write("     * @param entity 要刪除的 " + entityName.toLowerCase() + "\n");
+            serviceWriter.write("     */\n");
+            serviceWriter.write("    void deleteByEntity(" + entityName + " entity);\n\n");
+        }
 
         serviceWriter.write("}\n");
         serviceWriter.close();
@@ -78,9 +104,10 @@ public class ServiceUtil {
      * @param entityName 實體名稱 (如：User)
      * @param fields 欄位名稱、型別等資料
      * @param primaryKeys 主鍵集合
+     * @param primaryKeyExists 主鍵是否存在
      * @throws IOException 讀取或寫入檔案時的錯誤
      */
-    public static void generateServiceImpl(String entityName, List<String[]> fields, Set<String> primaryKeys) throws IOException {
+    public static void generateServiceImpl(String entityName, List<String[]> fields, Set<String> primaryKeys, Boolean primaryKeyExists) throws IOException {
         File implFile = new File("file/output/service/Impl/" + entityName + "ServiceImpl.java");
         BufferedWriter implWriter = new BufferedWriter(new FileWriter(implFile));
 
@@ -103,55 +130,97 @@ public class ServiceUtil {
         implWriter.write("    @Autowired\n");
         implWriter.write("    private " + entityName + "Repository " + toCamelCase(entityName, false) + "Repository;\n\n");
 
-        // save 方法實作
-        implWriter.write("    /**\n");
-        implWriter.write("     * 根據主鍵 新增或更新 " + entityName.toLowerCase() + " <br/>\n");
-        implWriter.write("     * 若有資料則更新，無資料則新增\n");
-        implWriter.write("     * @param entity 要新增或更新的 " + entityName.toLowerCase() +"\n");
-        implWriter.write("     * @return 儲存後的實體物件\n");
-        implWriter.write("     */\n");
-        implWriter.write("    @Override\n");
-        implWriter.write("    @Transactional\n");
-        implWriter.write("    public " + entityName + " save(" + entityName + " entity) {\n");
-        implWriter.write("        return " + toCamelCase(entityName, false) + "Repository.save(entity);\n");
-        implWriter.write("    }\n\n");
+        if (primaryKeyExists) {
+            // save 方法實作
+            implWriter.write("    /**\n");
+            implWriter.write("     * 根據主鍵 新增或更新 " + entityName.toLowerCase() + " <br/>\n");
+            implWriter.write("     * 若有資料則更新，無資料則新增\n");
+            implWriter.write("     * @param entity 要新增或更新的 " + entityName.toLowerCase() +"\n");
+            implWriter.write("     * @return 儲存後的實體物件\n");
+            implWriter.write("     */\n");
+            implWriter.write("    @Override\n");
+            implWriter.write("    @Transactional\n");
+            implWriter.write("    public " + entityName + " save(" + entityName + " entity) {\n");
+            implWriter.write("        return " + entityName.toLowerCase() + "Repository.save(entity);\n");
+            implWriter.write("    }\n\n");
 
-        // saveAll 方法實作
-        implWriter.write("    /**\n");
-        implWriter.write("     * 根據主鍵 大量 新增或更新 " + entityName.toLowerCase() + " <br/>\n");
-        implWriter.write("     * 若有資料則更新，無資料則新增\n");
-        implWriter.write("     * @param entityList 要新增或更新的 " + entityName.toLowerCase() + " 清單\n");
-        implWriter.write("     * @return 儲存後的實體物件清單\n");
-        implWriter.write("     */\n");
-        implWriter.write("    @Override\n");
-        implWriter.write("    @Transactional\n");
-        implWriter.write("    public List<" + entityName + "> saveAll(List<" + entityName + "> entityList) {\n");
-        implWriter.write("        return " + toCamelCase(entityName, false) + "Repository.saveAll(entityList);\n");
-        implWriter.write("    }\n\n");
+            // saveAll 方法實作
+            implWriter.write("    /**\n");
+            implWriter.write("     * 根據主鍵 大量 新增或更新 " + entityName.toLowerCase() + " <br/>\n");
+            implWriter.write("     * 若有資料則更新，無資料則新增\n");
+            implWriter.write("     * @param entityList 要新增或更新的 " + entityName.toLowerCase() + " 清單\n");
+            implWriter.write("     * @return 儲存後的實體物件清單\n");
+            implWriter.write("     */\n");
+            implWriter.write("    @Override\n");
+            implWriter.write("    @Transactional\n");
+            implWriter.write("    public List<" + entityName + "> saveAll(List<" + entityName + "> entityList) {\n");
+            implWriter.write("        return " + entityName.toLowerCase() + "Repository.saveAll(entityList);\n");
+            implWriter.write("    }\n\n");
 
-        // findById 方法實作
-        implWriter.write("    /**\n");
-        implWriter.write("     * 根據主鍵 查詢 " + entityName.toLowerCase() + "\n");
-        implWriter.write("     * @param id 主鍵值\n");
-        implWriter.write("     * @return 查詢到的實體物件，若無則返回 null\n");
-        implWriter.write("     */\n");
-        implWriter.write("    @Override\n");
-        implWriter.write("    @Transactional(readOnly = true)\n");
-        implWriter.write("    public " + entityName + " findById(" + primaryKeyType + " id) {\n");
-        implWriter.write("        return " + toCamelCase(entityName, false) + "Repository.findById(id).orElse(null);\n");
-        implWriter.write("    }\n\n");
+            // findById 方法實作
+            implWriter.write("    /**\n");
+            implWriter.write("     * 根據主鍵 查詢 " + entityName.toLowerCase() + "\n");
+            implWriter.write("     * @param id 主鍵值\n");
+            implWriter.write("     * @return 查詢到的實體物件，若無則返回 null\n");
+            implWriter.write("     */\n");
+            implWriter.write("    @Override\n");
+            implWriter.write("    @Transactional(readOnly = true)\n");
+            implWriter.write("    public " + entityName + " findById(" + primaryKeyType + " id) {\n");
+            implWriter.write("        return " + entityName.toLowerCase() + "Repository.findById(id).orElse(null);\n");
+            implWriter.write("    }\n\n");
 
-        // deleteById 方法實作
-        implWriter.write("    /**\n");
-        implWriter.write("     * 根據主鍵 刪除 " + entityName.toLowerCase() + "\n");
-        implWriter.write("     * @param id 主鍵值\n");
-        implWriter.write("     */\n");
-        implWriter.write("    @Override\n");
-        implWriter.write("    @Transactional\n");
-        implWriter.write("    public void deleteById(" + primaryKeyType + " id) {\n");
-        implWriter.write("        " + toCamelCase(entityName, false) + "Repository.deleteById(id);\n");
-        implWriter.write("    }\n");
+            // deleteById 方法實作
+            implWriter.write("    /**\n");
+            implWriter.write("     * 根據主鍵 刪除 " + entityName.toLowerCase() + "\n");
+            implWriter.write("     * @param id 主鍵值\n");
+            implWriter.write("     */\n");
+            implWriter.write("    @Override\n");
+            implWriter.write("    @Transactional\n");
+            implWriter.write("    public void deleteById(" + primaryKeyType + " id) {\n");
+            implWriter.write("        if (" + entityName.toLowerCase() + "Repository.existsById(id)) {\n");
+            implWriter.write("            " + entityName.toLowerCase() + "Repository.deleteById(id);\n");
+            implWriter.write("        }\n");
+            implWriter.write("    }\n");
 
+        } else {
+            // insert 方法實作
+            implWriter.write("    /**\n");
+            implWriter.write("     * 單筆新增 " + entityName.toLowerCase() + " <br/>\n");
+            implWriter.write("     * @param entity 要新增的 " + entityName.toLowerCase() + "\n");
+            implWriter.write("     * @return 儲存後的實體物件\n");
+            implWriter.write("     */\n");
+            implWriter.write("    @Override\n");
+            implWriter.write("    @Transactional\n");
+            implWriter.write("    public " + entityName + " insert(" + entityName + " entity) {\n");
+            implWriter.write("        return " + entityName.toLowerCase() + "Repository.save(entity);\n");
+            implWriter.write("    }\n\n");
+
+            // insertAll 方法實作
+            implWriter.write("    /**\n");
+            implWriter.write("     * 多筆新增 " + entityName.toLowerCase() + " <br/>\n");
+            implWriter.write("     * @param entityList 要新增的 " + entityName.toLowerCase() + " 清單\n");
+            implWriter.write("     * @return 儲存後的實體物件清單\n");
+            implWriter.write("     */\n");
+            implWriter.write("    @Override\n");
+            implWriter.write("    @Transactional\n");
+            implWriter.write("    public List<" + entityName + "> insertAll(List<" + entityName + "> entityList) {\n");
+            implWriter.write("        return " + entityName.toLowerCase() + "Repository.saveAll(entityList);\n");
+            implWriter.write("    }\n\n");
+
+            // deleteByEntity 方法實作
+            implWriter.write("    /**\n");
+            implWriter.write("     * 單筆刪除 " + entityName.toLowerCase() + "\n");
+            implWriter.write("     * @param entity 要刪除的 " + entityName.toLowerCase() + "\n");
+            implWriter.write("     */\n");
+            implWriter.write("    @Override\n");
+            implWriter.write("    @Transactional\n");
+            implWriter.write("    public void deleteByEntity(" + entityName + " entity) {\n");
+            implWriter.write("        if (" + entityName.toLowerCase() + "Repository.existsById(entity)) {\n");
+            implWriter.write("            " + entityName.toLowerCase() + "Repository.deleteById(entity);\n");
+            implWriter.write("        }\n");
+            implWriter.write("    }\n");
+
+        }
         implWriter.write("}\n");
         implWriter.close();
         System.out.println("生成 Service Impl 檔案，位於 " + "file/output/service/Impl/" + entityName + "ServiceImpl.java");
