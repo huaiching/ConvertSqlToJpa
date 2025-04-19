@@ -1,9 +1,12 @@
 import java.io.*;
 import java.util.*;
-import java.util.regex.*;
 
 import static utils.BasicUtil.*;
+import static utils.ControllerUtil.generateController;
 import static utils.EntityUtil.*;
+import static utils.RepositoryUtil.generateRepository;
+import static utils.ServiceUtil.generateServiceImpl;
+import static utils.ServiceUtil.generateServiceInterface;
 
 public class Application {
     public static void main(String[] args) {
