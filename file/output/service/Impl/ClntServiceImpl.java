@@ -1,5 +1,6 @@
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
@@ -14,6 +15,7 @@ public class ClntServiceImpl implements ClntService {
      * @return 儲存後的實體物件
      */
     @Override
+    @Transactional
     public Clnt save(Clnt entity) {
         return clntRepository.save(entity);
     }
@@ -25,6 +27,7 @@ public class ClntServiceImpl implements ClntService {
      * @return 儲存後的實體物件清單
      */
     @Override
+    @Transactional
     public List<Clnt> saveAll(List<Clnt> entityList) {
         return clntRepository.saveAll(entityList);
     }
@@ -35,6 +38,7 @@ public class ClntServiceImpl implements ClntService {
      * @return 查詢到的實體物件，若無則返回 null
      */
     @Override
+    @Transactional(readOnly = true)
     public Clnt findById(String id) {
         return clntRepository.findById(id).orElse(null);
     }
@@ -44,6 +48,7 @@ public class ClntServiceImpl implements ClntService {
      * @param id 主鍵值
      */
     @Override
+    @Transactional
     public void deleteById(String id) {
         clntRepository.deleteById(id);
     }

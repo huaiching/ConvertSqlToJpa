@@ -371,6 +371,7 @@ public class Application {
 
         implWriter.write("import org.springframework.stereotype.Service;\n");
         implWriter.write("import org.springframework.beans.factory.annotation.Autowired;\n");
+        implWriter.write("import org.springframework.transaction.annotation.Transactional;\n");
         implWriter.write("import java.util.List;\n");
         implWriter.write("\n");
         implWriter.write("@Service\n");
@@ -388,6 +389,7 @@ public class Application {
         implWriter.write("     * @return 儲存後的實體物件\n");
         implWriter.write("     */\n");
         implWriter.write("    @Override\n");
+        implWriter.write("    @Transactional\n");
         implWriter.write("    public " + entityName + " save(" + entityName + " entity) {\n");
         implWriter.write("        return " + toCamelCase(entityName, false) + "Repository.save(entity);\n");
         implWriter.write("    }\n\n");
@@ -400,6 +402,7 @@ public class Application {
         implWriter.write("     * @return 儲存後的實體物件清單\n");
         implWriter.write("     */\n");
         implWriter.write("    @Override\n");
+        implWriter.write("    @Transactional\n");
         implWriter.write("    public List<" + entityName + "> saveAll(List<" + entityName + "> entityList) {\n");
         implWriter.write("        return " + toCamelCase(entityName, false) + "Repository.saveAll(entityList);\n");
         implWriter.write("    }\n\n");
@@ -411,6 +414,7 @@ public class Application {
         implWriter.write("     * @return 查詢到的實體物件，若無則返回 null\n");
         implWriter.write("     */\n");
         implWriter.write("    @Override\n");
+        implWriter.write("    @Transactional(readOnly = true)\n");
         implWriter.write("    public " + entityName + " findById(" + primaryKeyType + " id) {\n");
         implWriter.write("        return " + toCamelCase(entityName, false) + "Repository.findById(id).orElse(null);\n");
         implWriter.write("    }\n\n");
@@ -421,6 +425,7 @@ public class Application {
         implWriter.write("     * @param id 主鍵值\n");
         implWriter.write("     */\n");
         implWriter.write("    @Override\n");
+        implWriter.write("    @Transactional\n");
         implWriter.write("    public void deleteById(" + primaryKeyType + " id) {\n");
         implWriter.write("        " + toCamelCase(entityName, false) + "Repository.deleteById(id);\n");
         implWriter.write("    }\n");
