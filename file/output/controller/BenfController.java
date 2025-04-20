@@ -19,19 +19,19 @@ public class BenfController {
 
     @Operation(summary = "單筆新增 Benf",
                description = "單筆新增 Benf 資料",
-               operationId = "insert")
-    @PostMapping("/insert")
-    public ResponseEntity<Benf> insert(@RequestBody Benf entity) {
-        Benf savedEntity = benfService.insert(entity);
+               operationId = "save")
+    @PostMapping("/save")
+    public ResponseEntity<Benf> save(@RequestBody Benf entity) {
+        Benf savedEntity = benfService.save(entity);
         return ResponseEntity.ok(savedEntity);
     }
 
     @Operation(summary = "多筆新增 Benf",
                description = "多筆新增 Benf 資料",
-               operationId = "insertAll")
-    @PostMapping("/insertAll")
-    public ResponseEntity<List<Benf>> insertAll(@RequestBody List<Benf> entityList) {
-        List<Benf> savedEntityList = benfService.insertAll(entityList);
+               operationId = "saveAll")
+    @PostMapping("/saveAll")
+    public ResponseEntity<List<Benf>> saveAll(@RequestBody List<Benf> entityList) {
+        List<Benf> savedEntityList = benfService.saveAll(entityList);
         return ResponseEntity.ok(savedEntityList);
     }
 
@@ -43,6 +43,8 @@ public class BenfController {
         benfService.update(entityUpdate.getBenfOri(), entityUpdate.getBenfNew());
         return ResponseEntity.ok().build();
     }
+
+    // 無主鍵者，自行處理 查詢 方法
 
     @Operation(summary = "單筆刪除 Benf",
                description = "單筆刪除 Benf 資料",

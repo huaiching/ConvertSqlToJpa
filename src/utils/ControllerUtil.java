@@ -57,28 +57,49 @@ public class ControllerUtil {
                         .map(f -> f[1])
                         .orElse("Integer");
 
+        // save 方法
         if (primaryKeyExists) {
-            // 設定 save
             controllerWriter.write("    @Operation(summary = \"根據主鍵 新增或更新 " + entityName + "\",\n");
             controllerWriter.write("               description = \"根據主鍵，若有資料則更新，無資料則新增\",\n");
-            controllerWriter.write("               operationId = \"save\")\n");
-            controllerWriter.write("    @PostMapping(\"/save\")\n");
-            controllerWriter.write("    public ResponseEntity<" + entityName + "> save(@RequestBody " + entityName + " entity) {\n");
-            controllerWriter.write("        " + entityName + " savedEntity = " + entityName.toLowerCase() + "Service.save(entity);\n");
-            controllerWriter.write("        return ResponseEntity.ok(savedEntity);\n");
-            controllerWriter.write("    }\n\n");
+        } else {
+            controllerWriter.write("    @Operation(summary = \"單筆新增 " + entityName + "\",\n");
+            controllerWriter.write("               description = \"單筆新增 " + entityName + " 資料\",\n");
+        }
+        controllerWriter.write("               operationId = \"save\")\n");
+        controllerWriter.write("    @PostMapping(\"/save\")\n");
+        controllerWriter.write("    public ResponseEntity<" + entityName + "> save(@RequestBody " + entityName + " entity) {\n");
+        controllerWriter.write("        " + entityName + " savedEntity = " + entityName.toLowerCase() + "Service.save(entity);\n");
+        controllerWriter.write("        return ResponseEntity.ok(savedEntity);\n");
+        controllerWriter.write("    }\n\n");
 
-            // 設定 saveAll
+        // saveAll 方法
+        if (primaryKeyExists) {
             controllerWriter.write("    @Operation(summary = \"根據主鍵 大量 新增或更新 " + entityName + "\",\n");
             controllerWriter.write("               description = \"根據主鍵，若有資料則更新，無資料則新增\",\n");
-            controllerWriter.write("               operationId = \"saveAll\")\n");
-            controllerWriter.write("    @PostMapping(\"/saveAll\")\n");
-            controllerWriter.write("    public ResponseEntity<List<" + entityName + ">> saveAll(@RequestBody List<" + entityName + "> entityList) {\n");
-            controllerWriter.write("        List<" + entityName + "> savedEntityList = " + entityName.toLowerCase() + "Service.saveAll(entityList);\n");
-            controllerWriter.write("        return ResponseEntity.ok(savedEntityList);\n");
-            controllerWriter.write("    }\n\n");
+        } else {
+            controllerWriter.write("    @Operation(summary = \"多筆新增 " + entityName + "\",\n");
+            controllerWriter.write("               description = \"多筆新增 " + entityName + " 資料\",\n");
+        }
+        controllerWriter.write("               operationId = \"saveAll\")\n");
+        controllerWriter.write("    @PostMapping(\"/saveAll\")\n");
+        controllerWriter.write("    public ResponseEntity<List<" + entityName + ">> saveAll(@RequestBody List<" + entityName + "> entityList) {\n");
+        controllerWriter.write("        List<" + entityName + "> savedEntityList = " + entityName.toLowerCase() + "Service.saveAll(entityList);\n");
+        controllerWriter.write("        return ResponseEntity.ok(savedEntityList);\n");
+        controllerWriter.write("    }\n\n");
 
-            // 設定 findById
+        // update 方法
+        controllerWriter.write("    @Operation(summary = \"單筆更新 " + entityName + "\",\n");
+        controllerWriter.write("               description = \"單筆新增 " + entityName + " 資料\",\n");
+        controllerWriter.write("               operationId = \"update\")\n");
+        controllerWriter.write("    @PostMapping(\"/update\")\n");
+        controllerWriter.write("    public ResponseEntity<Void> update(@RequestBody " + entityName + "." + entityName + "Update entityUpdate) {\n");
+        controllerWriter.write("        " + entityName.toLowerCase() + "Service.update(entityUpdate.get" + capitalize(entityName) + "Ori(), entityUpdate.get" + capitalize(entityName) + "New());\n");
+        controllerWriter.write("        return ResponseEntity.ok().build();\n");
+        controllerWriter.write("    }\n\n");
+
+
+        // findById 方法
+        if (primaryKeyExists) {
             controllerWriter.write("    @Operation(summary = \"根據主鍵 查詢 " + entityName + "\",\n");
             controllerWriter.write("               description = \"根據主鍵查詢 " + entityName + " 資料\",\n");
             controllerWriter.write("               operationId = \"findById\")\n");
@@ -95,8 +116,12 @@ public class ControllerUtil {
             controllerWriter.write("        }\n");
             controllerWriter.write("        return ResponseEntity.ok(entity);  // 回傳 HTTP 200 OK 和資料\n");
             controllerWriter.write("    }\n\n");
+        } else {
+            controllerWriter.write("    // 無主鍵者，自行處理 查詢 方法\n\n");
+        }
 
-            // 設定 deleteById
+        // delete 方法
+        if (primaryKeyExists) {
             controllerWriter.write("    @Operation(summary = \"根據主鍵 刪除 " + entityName + " 資料\",\n");
             controllerWriter.write("               description = \"根據主鍵刪除 " + entityName + " 資料\",\n");
             controllerWriter.write("               operationId = \"deleteById\")\n");
@@ -111,37 +136,6 @@ public class ControllerUtil {
             controllerWriter.write("        return ResponseEntity.ok().build();\n");
             controllerWriter.write("    }\n");
         } else {
-            // 設定 insert
-            controllerWriter.write("    @Operation(summary = \"單筆新增 " + entityName + "\",\n");
-            controllerWriter.write("               description = \"單筆新增 " + entityName + " 資料\",\n");
-            controllerWriter.write("               operationId = \"insert\")\n");
-            controllerWriter.write("    @PostMapping(\"/insert\")\n");
-            controllerWriter.write("    public ResponseEntity<" + entityName + "> insert(@RequestBody " + entityName + " entity) {\n");
-            controllerWriter.write("        " + entityName + " savedEntity = " + entityName.toLowerCase() + "Service.insert(entity);\n");
-            controllerWriter.write("        return ResponseEntity.ok(savedEntity);\n");
-            controllerWriter.write("    }\n\n");
-
-            // 設定 insertAll
-            controllerWriter.write("    @Operation(summary = \"多筆新增 " + entityName + "\",\n");
-            controllerWriter.write("               description = \"多筆新增 " + entityName + " 資料\",\n");
-            controllerWriter.write("               operationId = \"insertAll\")\n");
-            controllerWriter.write("    @PostMapping(\"/insertAll\")\n");
-            controllerWriter.write("    public ResponseEntity<List<" + entityName + ">> insertAll(@RequestBody List<" + entityName + "> entityList) {\n");
-            controllerWriter.write("        List<" + entityName + "> savedEntityList = " + entityName.toLowerCase() + "Service.insertAll(entityList);\n");
-            controllerWriter.write("        return ResponseEntity.ok(savedEntityList);\n");
-            controllerWriter.write("    }\n\n");
-
-            // 設定 update
-            controllerWriter.write("    @Operation(summary = \"單筆更新 " + entityName + "\",\n");
-            controllerWriter.write("               description = \"單筆新增 " + entityName + " 資料\",\n");
-            controllerWriter.write("               operationId = \"update\")\n");
-            controllerWriter.write("    @PostMapping(\"/update\")\n");
-            controllerWriter.write("    public ResponseEntity<Void> update(@RequestBody " + entityName + "." + entityName + "Update entityUpdate) {\n");
-            controllerWriter.write("        " + entityName.toLowerCase() + "Service.update(entityUpdate.get" + capitalize(entityName) + "Ori(), entityUpdate.get" + capitalize(entityName) + "New());\n");
-            controllerWriter.write("        return ResponseEntity.ok().build();\n");
-            controllerWriter.write("    }\n\n");
-
-            // 設定 deleteByEntity
             controllerWriter.write("    @Operation(summary = \"單筆刪除 " + entityName + "\",\n");
             controllerWriter.write("               description = \"單筆刪除 " + entityName + " 資料\",\n");
             controllerWriter.write("               operationId = \"deleteByEntity\")\n");

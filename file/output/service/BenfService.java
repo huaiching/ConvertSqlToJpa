@@ -13,7 +13,7 @@ public interface BenfService {
      * @param entityList 要新增的 benf 清單
      * @return 儲存後的實體物件清單
      */
-    List<Benf> insertAll(List<Benf> entityList);
+    List<Benf> saveAll(List<Benf> entityList);
 
     /**
      * 單筆更新 benf <br/>
@@ -21,6 +21,8 @@ public interface BenfService {
      * @param entityNew 變更後的 benf
      */
     void update(Benf entityOri, Benf entityNew);
+
+    // 無主鍵者，自行處理 查詢 方法
 
     /**
      * 單筆刪除 benf

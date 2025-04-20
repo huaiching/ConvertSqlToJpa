@@ -13,18 +13,18 @@ public class BenfServiceImpl implements BenfService {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     /**
-     * 單筆新增 benf <br/>
+     * 單筆新增 benf
      * @param entity 要新增的 benf
      * @return 儲存後的實體物件
      */
     @Override
     @Transactional
-    public Benf insert(Benf entity) {
+    public Benf save(Benf entity) {
         return benfRepository.save(entity);
     }
 
     /**
-     * 多筆新增 benf <br/>
+     * 多筆新增 benf
      * @param entityList 要新增的 benf 清單
      * @return 儲存後的實體物件清單
      */
@@ -65,6 +65,8 @@ public class BenfServiceImpl implements BenfService {
         // 執行 方法
         namedParameterJdbcTemplate.update(sql, params);
     }
+
+    // 無主鍵者，自行處理 查詢 方法實作
 
     /**
      * 單筆刪除 benf

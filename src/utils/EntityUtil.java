@@ -130,7 +130,9 @@ public class EntityUtil {
         entityWriter.write(");\n");
         entityWriter.write("    }\n\n");
 
-        // 如果有多主鍵，生成內部 Key 類
+        /**
+         * 如果有多主鍵，生成內部 Key 類
+         */
         if (primaryKeys.size() > 1) {
             entityWriter.write("    public static class " + entityName + "Key implements Serializable {\n");
             entityWriter.write("        private static final long serialVersionUID = 1L;\n\n");
@@ -193,29 +195,28 @@ public class EntityUtil {
             entityWriter.write("    }\n");
         }
 
-        // 針對無主鍵者，要生成 update 類
-        if (!primaryKeyExists) {
-            entityWriter.write("    public static class " + entityName + "Update implements Serializable {\n");
-            entityWriter.write("        private static final long serialVersionUID = 1L;\n\n");
-            entityWriter.write("        private " + entityName + " " + entityName.toLowerCase() + "Ori;\n");
-            entityWriter.write("        private " + entityName + " " + entityName.toLowerCase() + "New;\n");
-            entityWriter.write("\n");
-
-            // Key 的 getter 和 setter
-            entityWriter.write("        public " + entityName + " get" + capitalize(entityName) + "Ori() {\n");
-            entityWriter.write("            return " + entityName.toLowerCase() + "Ori;\n");
-            entityWriter.write("        }\n\n");
-            entityWriter.write("        public void set" + capitalize(entityName) + "Ori(" + entityName + " " + entityName.toLowerCase() + "Ori) {\n");
-            entityWriter.write("            this." + entityName.toLowerCase() + "Ori = " + entityName.toLowerCase() + "Ori;\n");
-            entityWriter.write("        }\n\n");
-            entityWriter.write("        public " + entityName + " get" + capitalize(entityName) + "New() {\n");
-            entityWriter.write("            return " + entityName.toLowerCase() + "New;\n");
-            entityWriter.write("        }\n\n");
-            entityWriter.write("        public void set" + capitalize(entityName) + "New(" + entityName + " " + entityName.toLowerCase() + "New) {\n");
-            entityWriter.write("            this." + entityName.toLowerCase() + "New = " + entityName.toLowerCase() + "New;\n");
-            entityWriter.write("        }\n\n");
-            entityWriter.write("    }\n");
-        }
+        /**
+         * 生成 update 類
+         */
+        entityWriter.write("    public static class " + entityName + "Update implements Serializable {\n");
+        entityWriter.write("        private static final long serialVersionUID = 1L;\n\n");
+        entityWriter.write("        private " + entityName + " " + entityName.toLowerCase() + "Ori;\n");
+        entityWriter.write("        private " + entityName + " " + entityName.toLowerCase() + "New;\n");
+        entityWriter.write("\n");
+        // Key 的 getter 和 setter
+        entityWriter.write("        public " + entityName + " get" + capitalize(entityName) + "Ori() {\n");
+        entityWriter.write("            return " + entityName.toLowerCase() + "Ori;\n");
+        entityWriter.write("        }\n\n");
+        entityWriter.write("        public void set" + capitalize(entityName) + "Ori(" + entityName + " " + entityName.toLowerCase() + "Ori) {\n");
+        entityWriter.write("            this." + entityName.toLowerCase() + "Ori = " + entityName.toLowerCase() + "Ori;\n");
+        entityWriter.write("        }\n\n");
+        entityWriter.write("        public " + entityName + " get" + capitalize(entityName) + "New() {\n");
+        entityWriter.write("            return " + entityName.toLowerCase() + "New;\n");
+        entityWriter.write("        }\n\n");
+        entityWriter.write("        public void set" + capitalize(entityName) + "New(" + entityName + " " + entityName.toLowerCase() + "New) {\n");
+        entityWriter.write("            this." + entityName.toLowerCase() + "New = " + entityName.toLowerCase() + "New;\n");
+        entityWriter.write("        }\n\n");
+        entityWriter.write("    }\n");
 
         entityWriter.write("}\n");
         entityWriter.close();
