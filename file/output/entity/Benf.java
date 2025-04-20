@@ -10,22 +10,27 @@ import java.util.Objects;
 @Entity
 @Table(name = "benf")
 @IdClass(Benf.BenfKey.class)
+@Schema(description = "受益人檔")
 public class Benf implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @Schema(description = "保單號碼")
     @Column(name = "policy_no")
     private String policyNo;
 
     @Id
+    @Schema(description = "關係")
     @Column(name = "relation")
     private String relation;
 
     @Id
+    @Schema(description = "客戶證號")
     @Column(name = "client_id")
     private String clientId;
 
     @Id
+    @Schema(description = "姓名")
     @Column(name = "names")
     private String names;
 

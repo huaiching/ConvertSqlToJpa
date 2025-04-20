@@ -1,4 +1,4 @@
-package utils;
+package service;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-import static utils.BasicUtil.capitalize;
-import static utils.BasicUtil.toCamelCase;
+import static service.BasicUtil.capitalize;
+import static service.BasicUtil.toCamelCase;
 
 /**
  * 產生 controller 的相關方法

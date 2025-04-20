@@ -21,9 +21,9 @@
         有提供中文說明者，``entity`` 會建立 SWAGGER 相關說明
     - **支援型態**: 
       - 文字: `char`, `varchar`, `LVARCHAR` -> `String`
-      - 數字: `int8` -> `long`
-      - 數字: `int4`, `int` -> `int`
-      - 數字: `smallint` -> `short`
+      - 數字: `int8` -> `Long`
+      - 數字: `int4`, `int` -> `Integer`
+      - 數字: `smallint` -> `Short`
       - 浮點數: `float` -> `Double`
       - 未定義型態保持原樣
 

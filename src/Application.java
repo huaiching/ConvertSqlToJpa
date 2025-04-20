@@ -1,12 +1,12 @@
 import java.io.*;
 import java.util.*;
 
-import static utils.BasicUtil.*;
-import static utils.ControllerUtil.generateController;
-import static utils.EntityUtil.*;
-import static utils.RepositoryUtil.generateRepository;
-import static utils.ServiceUtil.generateServiceImpl;
-import static utils.ServiceUtil.generateServiceInterface;
+import static service.BasicUtil.*;
+import static service.ControllerUtil.generateController;
+import static service.EntityUtil.*;
+import static service.RepositoryUtil.generateRepository;
+import static service.ServiceUtil.generateServiceImpl;
+import static service.ServiceUtil.generateServiceInterface;
 
 public class Application {
     public static void main(String[] args) {
