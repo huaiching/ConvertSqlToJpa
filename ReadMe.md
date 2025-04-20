@@ -51,7 +51,7 @@
       - 有主鍵 table，依照``primary_keys.txt``的設定建立主鍵
       - 無主鍵 table，使用 table 全部欄位 來建立複合主鍵
     - **repository**：``file/output/repository``資料夾
-    - **service**：``file/output/service``資料夾
+    - **utils**：``file/output/utils``資料夾
     - **serviceImpl**：``file/output/serviceImpl``資料夾
     - **controller**：``file/output/controller``資料夾
       - 有主鍵：save, saveAll, update, deleteById, findById。

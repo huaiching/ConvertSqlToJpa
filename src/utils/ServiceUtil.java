@@ -1,4 +1,4 @@
-package service;
+package utils;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-import static service.BasicUtil.capitalize;
-import static service.BasicUtil.toCamelCase;
+import static utils.BasicUtil.capitalize;
+import static utils.BasicUtil.toCamelCase;
 
 /**
  * 產生 sercvice, serviceImpl 的相關方法

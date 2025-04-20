@@ -1,4 +1,4 @@
-package service;
+package utils;
 
 /**
  * 設定共用方法
