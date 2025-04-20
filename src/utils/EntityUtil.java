@@ -32,10 +32,10 @@ public class EntityUtil {
         entityWriter.write("import javax.persistence.Id;\n");
         entityWriter.write("import javax.persistence.Column;\n");
         entityWriter.write("import javax.persistence.Table;\n");
-        entityWriter.write("import io.swagger.v3.oas.annotations.media.Schema;\n");
         if (primaryKeys.size() > 1) {
             entityWriter.write("import javax.persistence.IdClass;\n");
         }
+        entityWriter.write("import io.swagger.v3.oas.annotations.media.Schema;\n");
         entityWriter.write("import java.io.Serializable;\n");
         entityWriter.write("import java.util.Objects;\n");
         entityWriter.write("\n");

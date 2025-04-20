@@ -87,7 +87,7 @@ public class Application {
             generateRepository(entityName, fields, primaryKeys);
             generateServiceInterface(entityName, fields, primaryKeys, primaryKeyExists);
             generateServiceImpl(entityName, fields, primaryKeys, primaryKeyExists);
-            generateController(entityName, fields, primaryKeys, primaryKeyExists);
+            generateController(entityName, entityScheamName, fields, primaryKeys, primaryKeyExists);
 
         } catch (IOException e) {
             e.printStackTrace();

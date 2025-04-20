@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/Benf")
-@Tag(name = "Benf Controller")
+@Tag(name = "Benf Controller", description = "受益人檔 API 接口")
 public class BenfController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
