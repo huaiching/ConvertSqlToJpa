@@ -38,6 +38,7 @@ public class EntityUtil {
         entityWriter.write("import io.swagger.v3.oas.annotations.media.Schema;\n");
         entityWriter.write("import java.io.Serializable;\n");
         entityWriter.write("import java.util.Objects;\n");
+        entityWriter.write("import java.time.LocalDateTime;\n");
         entityWriter.write("\n");
 
         // 根據是否有複合主鍵來決定@Entity 和 @IdClass 的使用
