@@ -44,12 +44,14 @@ public class BasicUtil {
         sqlType = sqlType.toLowerCase();
         if (sqlType.matches("char.*|varchar.*|lvarchar.*")) {
             return "String";
-        } else if (sqlType.matches("int8")) {
+        } else if (sqlType.matches("int8|serial")) {
             return "Long";
         } else if (sqlType.matches("int4|int|integer")) {
             return "Integer";
         } else if (sqlType.matches("smallint")) {
             return "Short";
+        } else if (sqlType.matches("datetime")) {
+            return "LocalDateTime"; // 將 float 映射為 Double
         } else if (sqlType.contains("float")) {
             return "Double"; // 將 float 映射為 Double
         }
