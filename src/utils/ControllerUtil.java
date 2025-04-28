@@ -56,12 +56,7 @@ public class ControllerUtil {
         controllerWriter.write("\n");
 
         // 設定 主鍵
-        String primaryKeyType = primaryKeys.size() > 1 ? entityName + "." + entityName + "Key" :
-                fields.stream()
-                        .filter(f -> primaryKeys.contains(f[2]))
-                        .findFirst()
-                        .map(f -> f[1])
-                        .orElse("Integer");
+        String primaryKeyType =entityName + "." + entityName + "Key";
 
         // save 方法
         if (primaryKeyExists) {
@@ -109,14 +104,15 @@ public class ControllerUtil {
             controllerWriter.write("    @Operation(summary = \"根據主鍵 查詢 " + entityName + "\",\n");
             controllerWriter.write("               description = \"根據主鍵查詢 " + entityName + " 資料\",\n");
             controllerWriter.write("               operationId = \"findById\")\n");
+
+            controllerWriter.write("    @PostMapping(\"/getByIds\")\n");
+            controllerWriter.write("    public ResponseEntity<" + entityName + "> getByIds(@RequestBody " + primaryKeyType + " id) {\n");
             if (primaryKeys.size() == 1) {
-                controllerWriter.write("    @GetMapping(\"/{id}\")\n");
-                controllerWriter.write("    public ResponseEntity<" + entityName + "> findById(@Parameter(description = \"主鍵\") @PathVariable(\"id\") " + primaryKeyType + " id) {\n");
+                String key = primaryKeys.stream().findFirst().orElse("");
+                controllerWriter.write("        " + entityName + " entity = " + entityName.toLowerCase() + "Service.findById(id.get" + toCamelCase(key, true) + "());\n");
             } else {
-                controllerWriter.write("    @PostMapping(\"/getByIds\")\n");
-                controllerWriter.write("    public ResponseEntity<" + entityName + "> getByIds(@RequestBody " + primaryKeyType + " id) {\n");
+                controllerWriter.write("        " + entityName + " entity = " + entityName.toLowerCase() + "Service.findById(id);\n");
             }
-            controllerWriter.write("        " + entityName + " entity = " + entityName.toLowerCase() + "Service.findById(id);\n");
             controllerWriter.write("        if (entity == null) {\n");
             controllerWriter.write("            return ResponseEntity.ok(null); // 回傳 HTTP 200 OK 且 資料為 null\n");
             controllerWriter.write("        }\n");
@@ -131,14 +127,15 @@ public class ControllerUtil {
             controllerWriter.write("    @Operation(summary = \"根據主鍵 刪除 " + entityName + " 資料\",\n");
             controllerWriter.write("               description = \"根據主鍵刪除 " + entityName + " 資料\",\n");
             controllerWriter.write("               operationId = \"deleteById\")\n");
+
+            controllerWriter.write("    @PostMapping(\"/delete\")\n");
+            controllerWriter.write("    public ResponseEntity<Void> delete(@RequestBody " + primaryKeyType + " id) {\n");
             if (primaryKeys.size() == 1) {
-                controllerWriter.write("    @DeleteMapping(\"/{id}\")\n");
-                controllerWriter.write("    public ResponseEntity<Void> deleteById(@Parameter(description = \"主鍵\") @PathVariable(\"id\") " + primaryKeyType + " id) {\n");
+                String key = primaryKeys.stream().findFirst().orElse("");
+                controllerWriter.write("        " + entityName.toLowerCase() + "Service.deleteById(id.get" + toCamelCase(key, true) + "());\n");
             } else {
-                controllerWriter.write("    @PostMapping(\"/delete\")\n");
-                controllerWriter.write("    public ResponseEntity<Void> delete(@RequestBody " + primaryKeyType + " id) {\n");
+                controllerWriter.write("        " + entityName.toLowerCase() + "Service.deleteById(id);\n");
             }
-            controllerWriter.write("        " + entityName.toLowerCase() + "Service.deleteById(id);\n");
             controllerWriter.write("        return ResponseEntity.ok().build();\n");
             controllerWriter.write("    }\n");
         } else {

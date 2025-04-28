@@ -132,73 +132,73 @@ public class EntityUtil {
         entityWriter.write("    }\n\n");
 
         /**
-         * 如果有多主鍵，生成內部 Key 類
+         * 生成內部 Key 類
          */
-        if (primaryKeys.size() > 1) {
-            entityWriter.write("    public static class " + entityName + "Key implements Serializable {\n");
-            entityWriter.write("        private static final long serialVersionUID = 1L;\n\n");
-            for (String[] field : fields) {
-                if (primaryKeys.contains(field[2])) {
-                    entityWriter.write("        private " + field[1] + " " + field[0] + ";\n");
-                }
+        entityWriter.write("    // 主鍵 實體類\n");
+        entityWriter.write("    public static class " + entityName + "Key implements Serializable {\n");
+        entityWriter.write("        private static final long serialVersionUID = 1L;\n\n");
+        for (String[] field : fields) {
+            if (primaryKeys.contains(field[2])) {
+                entityWriter.write("        private " + field[1] + " " + field[0] + ";\n");
             }
-            entityWriter.write("\n");
-
-            // Key 的無參建構子
-            entityWriter.write("        public " + entityName + "Key() {\n");
-            entityWriter.write("        }\n\n");
-
-            // Key 的 getter 和 setter
-            for (String[] field : fields) {
-                if (primaryKeys.contains(field[2])) {
-                    String fieldName = field[0];
-                    String javaType = field[1];
-                    entityWriter.write("        public " + javaType + " get" + capitalize(fieldName) + "() {\n");
-                    entityWriter.write("            return " + fieldName + ";\n");
-                    entityWriter.write("        }\n\n");
-                    entityWriter.write("        public void set" + capitalize(fieldName) + "(" + javaType + " " + fieldName + ") {\n");
-                    entityWriter.write("            this." + fieldName + " = " + fieldName + ";\n");
-                    entityWriter.write("        }\n\n");
-                }
-            }
-
-            // Key 的 equals 和 hashCode
-            entityWriter.write("        @Override\n");
-            entityWriter.write("        public boolean equals(Object o) {\n");
-            entityWriter.write("            if (this == o) return true;\n");
-            entityWriter.write("            if (o == null || getClass() != o.getClass()) return false;\n");
-            entityWriter.write("            " + entityName +"Key that = (" + entityName + "Key) o;\n");
-            entityWriter.write("            return ");
-            first = true;
-            for (String[] field : fields) {
-                if (primaryKeys.contains(field[2])) {
-                    if (!first) entityWriter.write(" && ");
-                    entityWriter.write("Objects.equals(" + field[0] + ", that." + field[0] + ")");
-                    first = false;
-                }
-            }
-            entityWriter.write(";\n");
-            entityWriter.write("        }\n\n");
-
-            entityWriter.write("        @Override\n");
-            entityWriter.write("        public int hashCode() {\n");
-            entityWriter.write("            return Objects.hash(");
-            first = true;
-            for (String[] field : fields) {
-                if (primaryKeys.contains(field[2])) {
-                    if (!first) entityWriter.write(", ");
-                    entityWriter.write(field[0]);
-                    first = false;
-                }
-            }
-            entityWriter.write(");\n");
-            entityWriter.write("        }\n");
-            entityWriter.write("    }\n");
         }
+        entityWriter.write("\n");
+
+        // Key 的無參建構子
+        entityWriter.write("        public " + entityName + "Key() {\n");
+        entityWriter.write("        }\n\n");
+
+        // Key 的 getter 和 setter
+        for (String[] field : fields) {
+            if (primaryKeys.contains(field[2])) {
+                String fieldName = field[0];
+                String javaType = field[1];
+                entityWriter.write("        public " + javaType + " get" + capitalize(fieldName) + "() {\n");
+                entityWriter.write("            return " + fieldName + ";\n");
+                entityWriter.write("        }\n\n");
+                entityWriter.write("        public void set" + capitalize(fieldName) + "(" + javaType + " " + fieldName + ") {\n");
+                entityWriter.write("            this." + fieldName + " = " + fieldName + ";\n");
+                entityWriter.write("        }\n\n");
+            }
+        }
+
+        // Key 的 equals 和 hashCode
+        entityWriter.write("        @Override\n");
+        entityWriter.write("        public boolean equals(Object o) {\n");
+        entityWriter.write("            if (this == o) return true;\n");
+        entityWriter.write("            if (o == null || getClass() != o.getClass()) return false;\n");
+        entityWriter.write("            " + entityName +"Key that = (" + entityName + "Key) o;\n");
+        entityWriter.write("            return ");
+        first = true;
+        for (String[] field : fields) {
+            if (primaryKeys.contains(field[2])) {
+                if (!first) entityWriter.write(" && ");
+                entityWriter.write("Objects.equals(" + field[0] + ", that." + field[0] + ")");
+                first = false;
+            }
+        }
+        entityWriter.write(";\n");
+        entityWriter.write("        }\n\n");
+
+        entityWriter.write("        @Override\n");
+        entityWriter.write("        public int hashCode() {\n");
+        entityWriter.write("            return Objects.hash(");
+        first = true;
+        for (String[] field : fields) {
+            if (primaryKeys.contains(field[2])) {
+                if (!first) entityWriter.write(", ");
+                entityWriter.write(field[0]);
+                first = false;
+            }
+        }
+        entityWriter.write(");\n");
+        entityWriter.write("        }\n");
+        entityWriter.write("    }\n\n");
 
         /**
          * 生成 update 類
          */
+        entityWriter.write("    // update 實體類\n");
         entityWriter.write("    public static class " + entityName + "Update implements Serializable {\n");
         entityWriter.write("        private static final long serialVersionUID = 1L;\n\n");
         entityWriter.write("        private " + entityName + " " + entityName.toLowerCase() + "Ori;\n");

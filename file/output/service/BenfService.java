@@ -2,15 +2,17 @@ import java.util.List;
 
 public interface BenfService {
     /**
-     * 單筆新增 benf <br/>
-     * @param entity 要新增的 benf
+     * 根據主鍵 新增或更新 benf <br/>
+     * 若有資料則更新，無資料則新增
+     * @param entity 要新增或更新的 benf
      * @return 儲存後的實體物件
      */
     Benf insert(Benf entity);
 
     /**
-     * 多筆新增 benf <br/>
-     * @param entityList 要新增的 benf 清單
+     * 根據主鍵 大量 新增或更新 benf <br/>
+     * 若有資料則更新，無資料則新增
+     * @param entityList 要新增或更新的 benf 清單
      * @return 儲存後的實體物件清單
      */
     List<Benf> saveAll(List<Benf> entityList);
@@ -22,12 +24,16 @@ public interface BenfService {
      */
     void update(Benf entityOri, Benf entityNew);
 
-    // 無主鍵者，自行處理 查詢 方法
+    /**
+     * 根據主鍵 查詢 benf
+     * @param id 主鍵值
+     * @return 查詢到的實體物件，若無則返回 null
+     */
+    Benf findById(String id);
 
     /**
-     * 單筆刪除 benf
-     * @param entity 要刪除的 benf
+     * 根據主鍵 刪除 benf
+     * @param id 主鍵值
      */
-    void deleteByEntity(Benf.BenfKey entity);
-
+    void deleteById(String id);
 }

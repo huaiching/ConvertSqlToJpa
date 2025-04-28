@@ -1,7 +1,6 @@
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import java.util.*;
 
 @Service
@@ -13,8 +12,9 @@ public class BenfServiceImpl implements BenfService {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     /**
-     * 單筆新增 benf
-     * @param entity 要新增的 benf
+     * 根據主鍵 新增或更新 benf <br/>
+     * 若有資料則更新，無資料則新增
+     * @param entity 要新增或更新的 benf
      * @return 儲存後的實體物件
      */
     @Override
@@ -24,8 +24,9 @@ public class BenfServiceImpl implements BenfService {
     }
 
     /**
-     * 多筆新增 benf
-     * @param entityList 要新增的 benf 清單
+     * 根據主鍵 大量 新增或更新 benf <br/>
+     * 若有資料則更新，無資料則新增
+     * @param entityList 要新增或更新的 benf 清單
      * @return 儲存後的實體物件清單
      */
     @Override
@@ -66,17 +67,26 @@ public class BenfServiceImpl implements BenfService {
         namedParameterJdbcTemplate.update(sql, params);
     }
 
-    // 無主鍵者，自行處理 查詢 方法實作
+    /**
+     * 根據主鍵 查詢 benf
+     * @param id 主鍵值
+     * @return 查詢到的實體物件，若無則返回 null
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Benf findById(String id) {
+        return benfRepository.findById(id).orElse(null);
+    }
 
     /**
-     * 單筆刪除 benf
-     * @param entity 要刪除的 benf
+     * 根據主鍵 刪除 benf
+     * @param id 主鍵值
      */
     @Override
     @Transactional
-    public void deleteByEntity(Benf.BenfKey entity) {
-        if (benfRepository.existsById(entity)) {
-            benfRepository.deleteById(entity);
+    public void deleteById(String id) {
+        if (benfRepository.existsById(id)) {
+            benfRepository.deleteById(id);
         }
     }
 }
