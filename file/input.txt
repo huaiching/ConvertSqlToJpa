@@ -1,6 +1,6 @@
-CREATE TABLE benf (     -- 受益人檔
-    policy_no VARCHAR(12),  -- 保單號碼
-    relation  VARCHAR(1),   -- 關係
-    client_id VARCHAR(10),  -- 客戶證號
-    names     VARCHAR(100)  -- 姓名
+CREATE TABLE clnt (   -- 客戶資料檔
+    clinet_id   CHAR(10),   -- 客戶證號
+    names       CHAR(40),   -- 客戶姓名
+    sex         CHAR(1),    -- 客戶性別
+    age         INTEGER     -- 客戶年齡
 )

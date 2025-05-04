@@ -73,8 +73,7 @@ public class EntityUtil {
         entityWriter.write("\n");
 
         // 生成無參數建構子
-        entityWriter.write("    public " + entityName + "() {\n");
-        entityWriter.write("    }\n\n");
+        entityWriter.write("    public " + entityName + "() {}\n\n");
 
         // 生成 Getter 和 Setter 方法
         for (String[] field : fields) {
@@ -145,8 +144,7 @@ public class EntityUtil {
         entityWriter.write("\n");
 
         // Key 的無參建構子
-        entityWriter.write("        public " + entityName + "Key() {\n");
-        entityWriter.write("        }\n\n");
+        entityWriter.write("        public " + entityName + "Key() {}\n\n");
 
         // Key 的 getter 和 setter
         for (String[] field : fields) {

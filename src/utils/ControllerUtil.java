@@ -105,8 +105,8 @@ public class ControllerUtil {
             controllerWriter.write("               description = \"根據主鍵查詢 " + entityName + " 資料\",\n");
             controllerWriter.write("               operationId = \"findById\")\n");
 
-            controllerWriter.write("    @PostMapping(\"/getByIds\")\n");
-            controllerWriter.write("    public ResponseEntity<" + entityName + "> getByIds(@RequestBody " + primaryKeyType + " id) {\n");
+            controllerWriter.write("    @PostMapping(\"/findById\")\n");
+            controllerWriter.write("    public ResponseEntity<" + entityName + "> findById(@RequestBody " + primaryKeyType + " id) {\n");
             if (primaryKeys.size() == 1) {
                 String key = primaryKeys.stream().findFirst().orElse("");
                 controllerWriter.write("        " + entityName + " entity = " + entityName.toLowerCase() + "Service.findById(id.get" + toCamelCase(key, true) + "());\n");

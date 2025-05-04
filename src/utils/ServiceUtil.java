@@ -49,7 +49,7 @@ public class ServiceUtil {
         }
         serviceWriter.write("     * @return 儲存後的實體物件\n");
         serviceWriter.write("     */\n");
-        serviceWriter.write("    " + entityName + " insert(" + entityName + " entity);\n\n");
+        serviceWriter.write("    " + entityName + " save(" + entityName + " entity);\n\n");
 
         // saveAll 方法
         serviceWriter.write("    /**\n");
@@ -174,7 +174,7 @@ public class ServiceUtil {
         implWriter.write("     */\n");
         implWriter.write("    @Override\n");
         implWriter.write("    @Transactional\n");
-        implWriter.write("    public List<" + entityName + "> insertAll(List<" + entityName + "> entityList) {\n");
+        implWriter.write("    public List<" + entityName + "> saveAll(List<" + entityName + "> entityList) {\n");
         implWriter.write("        return " + entityName.toLowerCase() + "Repository.saveAll(entityList);\n");
         implWriter.write("    }\n\n");
 
