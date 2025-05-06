@@ -65,15 +65,6 @@ public class ServiceUtil {
         serviceWriter.write("     */\n");
         serviceWriter.write("    List<" + entityName + "> saveAll(List<" + entityName + "> entityList);\n\n");
 
-        // update 方法
-        serviceWriter.write("    /**\n");
-        serviceWriter.write("     * 單筆更新 " + entityName.toLowerCase() + " <br/>\n");
-        serviceWriter.write("     * @param entityOri 變更前的 " + entityName.toLowerCase() + "\n");
-        serviceWriter.write("     * @param entityNew 變更後的 " + entityName.toLowerCase() + "\n");
-        serviceWriter.write("     */\n");
-        serviceWriter.write("    void update(" + entityName + " entityOri, " + entityName + " entityNew);\n\n");
-
-
         // findById 方法
         if (primaryKeyExists) {
             serviceWriter.write("    /**\n");
@@ -115,7 +106,7 @@ public class ServiceUtil {
      * @throws IOException 讀取或寫入檔案時的錯誤
      */
     public static void generateServiceImpl(String entityName, List<String[]> fields, Set<String> primaryKeys, Boolean primaryKeyExists) throws IOException {
-        File implFile = new File("file/output/service/Impl/" + entityName + "ServiceImpl.java");
+        File implFile = new File("file/output/service/impl/" + entityName + "ServiceImpl.java");
         BufferedWriter implWriter = new BufferedWriter(new FileWriter(implFile));
 
         // 檢查主鍵的型態
@@ -128,9 +119,6 @@ public class ServiceUtil {
         implWriter.write("import org.springframework.stereotype.Service;\n");
         implWriter.write("import org.springframework.beans.factory.annotation.Autowired;\n");
         implWriter.write("import org.springframework.transaction.annotation.Transactional;\n");
-        if (!primaryKeyExists) {
-            implWriter.write("import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;\n");
-        }
         implWriter.write("import java.util.*;\n");
         implWriter.write("\n");
         implWriter.write("@Service\n");
@@ -139,8 +127,6 @@ public class ServiceUtil {
         // Repository 注入
         implWriter.write("    @Autowired\n");
         implWriter.write("    private " + entityName + "Repository " + toCamelCase(entityName, false) + "Repository;\n\n");
-        implWriter.write("    @Autowired\n");
-        implWriter.write("    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;\n\n");
 
         // save 方法實作
         implWriter.write("    /**\n");
@@ -177,50 +163,6 @@ public class ServiceUtil {
         implWriter.write("    public List<" + entityName + "> saveAll(List<" + entityName + "> entityList) {\n");
         implWriter.write("        return " + entityName.toLowerCase() + "Repository.saveAll(entityList);\n");
         implWriter.write("    }\n\n");
-
-        // update 方法
-        implWriter.write("    /**\n");
-        implWriter.write("     * 單筆更新 " + entityName.toLowerCase() + " <br/>\n");
-        implWriter.write("     * @param entityOri 變更前的 " + entityName.toLowerCase() + "\n");
-        implWriter.write("     * @param entityNew 變更後的 " + entityName.toLowerCase() + "\n");
-        implWriter.write("     */\n");
-        implWriter.write("    @Override\n");
-        implWriter.write("    @Transactional\n");
-        implWriter.write("    public void update(" + entityName + " entityOri, " + entityName + " entityNew) {\n");
-        implWriter.write("        // 建立 SQL\n");
-        implWriter.write("        String sql = \"UPDATE " + entityName.toLowerCase() + " \" +\n");
-        for (int i = 0; i < fields.size(); i++) {
-            String[] field = fields.get(i);
-            if (i == 0) {
-                implWriter.write("                     \"SET " + field[2] + " = :" + field[0] + "New \" +\n");
-            } else {
-                implWriter.write("                     \"   ," + field[2] + " = :" + field[0] + "New \" +\n");
-            }
-        }
-        for (int i = 0; i < fields.size(); i++) {
-            String[] field = fields.get(i);
-            if (i == 0) {
-                implWriter.write("                     \"WHERE " + field[2] + " = :" + field[0] + "Ori \" +\n");
-            } else if (i == fields.size() - 1) {
-                implWriter.write("                     \"  AND " + field[2] + " = :" + field[0] + "Ori \";\n");
-            } else {
-                implWriter.write("                     \"  AND " + field[2] + " = :" + field[0] + "Ori \" + \n");
-            }
-        }
-        implWriter.write("        // 填入 參數\n");
-        implWriter.write("        Map<String, Object> params = new HashMap<>();\n");
-        for (int i = 0; i < fields.size(); i++) {
-            String[] field = fields.get(i);
-            implWriter.write("        params.put(\"" + field[0] + "New\", entityNew.get" + capitalize(field[0]) + "());\n");
-        }
-        for (int i = 0; i < fields.size(); i++) {
-            String[] field = fields.get(i);
-            implWriter.write("        params.put(\"" + field[0] + "Ori\", entityOri.get" + capitalize(field[0]) + "());\n");
-        }
-        implWriter.write("        // 執行 方法\n");
-        implWriter.write("        namedParameterJdbcTemplate.update(sql, params);\n");
-        implWriter.write("    }\n\n");
-
 
         // findById 方法實作
         if (primaryKeyExists) {

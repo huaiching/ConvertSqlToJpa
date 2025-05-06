@@ -53,6 +53,8 @@ public class ControllerUtil {
         // 設定 @Autowired
         controllerWriter.write("    @Autowired\n");
         controllerWriter.write("    private " + entityName + "Service " + toCamelCase(entityName, false) + "Service;\n");
+        controllerWriter.write("    @Autowired\n");
+        controllerWriter.write("    private " + entityName + "Repository " + toCamelCase(entityName, false) + "Repository;\n");
         controllerWriter.write("\n");
 
         // 設定 主鍵
@@ -94,7 +96,7 @@ public class ControllerUtil {
         controllerWriter.write("               operationId = \"update\")\n");
         controllerWriter.write("    @PostMapping(\"/update\")\n");
         controllerWriter.write("    public ResponseEntity<Void> update(@RequestBody " + entityName + "." + entityName + "Update entityUpdate) {\n");
-        controllerWriter.write("        " + entityName.toLowerCase() + "Service.update(entityUpdate.get" + capitalize(entityName) + "Ori(), entityUpdate.get" + capitalize(entityName) + "New());\n");
+        controllerWriter.write("        " + entityName.toLowerCase() + "Repository.update(entityUpdate.get" + capitalize(entityName) + "Ori(), entityUpdate.get" + capitalize(entityName) + "New());\n");
         controllerWriter.write("        return ResponseEntity.ok().build();\n");
         controllerWriter.write("    }\n\n");
 

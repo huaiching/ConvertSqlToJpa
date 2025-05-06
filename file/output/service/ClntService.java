@@ -18,13 +18,6 @@ public interface ClntService {
     List<Clnt> saveAll(List<Clnt> entityList);
 
     /**
-     * 單筆更新 clnt <br/>
-     * @param entityOri 變更前的 clnt
-     * @param entityNew 變更後的 clnt
-     */
-    void update(Clnt entityOri, Clnt entityNew);
-
-    /**
      * 根據主鍵 查詢 clnt
      * @param id 主鍵值
      * @return 查詢到的實體物件，若無則返回 null

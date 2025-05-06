@@ -15,8 +15,8 @@ public class Clnt implements Serializable {
 
     @Id
     @Schema(description = "客戶證號")
-    @Column(name = "clinet_id")
-    private String clinetId;
+    @Column(name = "client_id")
+    private String clientId;
 
     @Schema(description = "客戶姓名")
     @Column(name = "names")
@@ -31,15 +31,14 @@ public class Clnt implements Serializable {
     private Integer age;
 
 
-    public Clnt() {
+    public Clnt() {}
+
+    public String getClientId() {
+        return clientId!= null ? clientId.trim() : null;
     }
 
-    public String getClinetId() {
-        return clinetId!= null ? clinetId.trim() : null;
-    }
-
-    public void setClinetId(String clinetId) {
-        this.clinetId = clinetId;
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
     public String getNames() {
@@ -71,29 +70,28 @@ public class Clnt implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Clnt that = (Clnt) o;
-        return Objects.equals(clinetId, that.clinetId);
+        return Objects.equals(clientId, that.clientId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(clinetId);
+        return Objects.hash(clientId);
     }
 
     // 主鍵 實體類
     public static class ClntKey implements Serializable {
         private static final long serialVersionUID = 1L;
 
-        private String clinetId;
+        private String clientId;
 
-        public ClntKey() {
+        public ClntKey() {}
+
+        public String getClientId() {
+            return clientId;
         }
 
-        public String getClinetId() {
-            return clinetId;
-        }
-
-        public void setClinetId(String clinetId) {
-            this.clinetId = clinetId;
+        public void setClientId(String clientId) {
+            this.clientId = clientId;
         }
 
         @Override
@@ -101,12 +99,12 @@ public class Clnt implements Serializable {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             ClntKey that = (ClntKey) o;
-            return Objects.equals(clinetId, that.clinetId);
+            return Objects.equals(clientId, that.clientId);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(clinetId);
+            return Objects.hash(clientId);
         }
     }
 

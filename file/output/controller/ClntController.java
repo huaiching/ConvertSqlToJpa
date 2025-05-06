@@ -16,6 +16,8 @@ public class ClntController {
 
     @Autowired
     private ClntService clntService;
+    @Autowired
+    private ClntRepository clntRepository;
 
     @Operation(summary = "根據主鍵 新增或更新 Clnt",
                description = "根據主鍵，若有資料則更新，無資料則新增",
@@ -40,16 +42,16 @@ public class ClntController {
                operationId = "update")
     @PostMapping("/update")
     public ResponseEntity<Void> update(@RequestBody Clnt.ClntUpdate entityUpdate) {
-        clntService.update(entityUpdate.getClntOri(), entityUpdate.getClntNew());
+        clntRepository.update(entityUpdate.getClntOri(), entityUpdate.getClntNew());
         return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "根據主鍵 查詢 Clnt",
                description = "根據主鍵查詢 Clnt 資料",
                operationId = "findById")
-    @PostMapping("/getByIds")
-    public ResponseEntity<Clnt> getByIds(@RequestBody Clnt.ClntKey id) {
-        Clnt entity = clntService.findById(id.getClinetId());
+    @PostMapping("/findById")
+    public ResponseEntity<Clnt> findById(@RequestBody Clnt.ClntKey id) {
+        Clnt entity = clntService.findById(id.getClientId());
         if (entity == null) {
             return ResponseEntity.ok(null); // 回傳 HTTP 200 OK 且 資料為 null
         }
@@ -61,7 +63,7 @@ public class ClntController {
                operationId = "deleteById")
     @PostMapping("/delete")
     public ResponseEntity<Void> delete(@RequestBody Clnt.ClntKey id) {
-        clntService.deleteById(id.getClinetId());
+        clntService.deleteById(id.getClientId());
         return ResponseEntity.ok().build();
     }
 }

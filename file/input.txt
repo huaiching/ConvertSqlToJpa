@@ -1,5 +1,5 @@
 CREATE TABLE clnt (   -- 客戶資料檔
-    clinet_id   CHAR(10),   -- 客戶證號
+    client_id   CHAR(10),   -- 客戶證號
     names       CHAR(40),   -- 客戶姓名
     sex         CHAR(1),    -- 客戶性別
     age         INTEGER     -- 客戶年齡

@@ -5,6 +5,7 @@ import static utils.BasicUtil.*;
 import static utils.ControllerUtil.generateController;
 import static utils.EntityUtil.*;
 import static utils.RepositoryUtil.generateRepository;
+import static utils.RepositoryUtil.generateRepositoryImpl;
 import static utils.ServiceUtil.generateServiceImpl;
 import static utils.ServiceUtil.generateServiceInterface;
 
@@ -78,13 +79,15 @@ public class Application {
             // 生成 資料夾
             new File("file/output/entity").mkdirs();
             new File("file/output/repository").mkdirs();
+            new File("file/output/repository/impl").mkdirs();
             new File("file/output/controller").mkdirs();
             new File("file/output/service").mkdirs();
-            new File("file/output/service/Impl").mkdirs();
+            new File("file/output/service/impl").mkdirs();
 
             // 生成 Entity, Repository, service, serviceImpl 和 Controller
             generateEntity(entityName, entityScheamName, fields, primaryKeys, primaryKeyExists);
             generateRepository(entityName, fields, primaryKeys);
+            generateRepositoryImpl(entityName, fields, primaryKeys, primaryKeyExists);
             generateServiceInterface(entityName, fields, primaryKeys, primaryKeyExists);
             generateServiceImpl(entityName, fields, primaryKeys, primaryKeyExists);
             generateController(entityName, entityScheamName, fields, primaryKeys, primaryKeyExists);
