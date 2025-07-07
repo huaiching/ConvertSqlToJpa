@@ -27,6 +27,8 @@ public class ControllerUtil {
         File controllerFile = new File("file/output/controller/" + entityName + "Controller.java");
         BufferedWriter controllerWriter = new BufferedWriter(new FileWriter(controllerFile));
 
+        controllerWriter.write("package " + BasicUtil.getProjectPath() + ".controller;\n");
+        controllerWriter.write("\n");
         controllerWriter.write("import org.slf4j.Logger;\n");
         controllerWriter.write("import org.slf4j.LoggerFactory;\n");
         controllerWriter.write("import org.springframework.beans.factory.annotation.Autowired;\n");
@@ -35,6 +37,8 @@ public class ControllerUtil {
         controllerWriter.write("import io.swagger.v3.oas.annotations.Operation;\n");
         controllerWriter.write("import io.swagger.v3.oas.annotations.tags.Tag;\n");
         controllerWriter.write("import io.swagger.v3.oas.annotations.Parameter;\n");
+        controllerWriter.write("import " + BasicUtil.getProjectPath() + ".entity." + entityName + ";\n");
+        controllerWriter.write("import " + BasicUtil.getProjectPath() + ".service." + entityName + "Service;\n");
         controllerWriter.write("import java.util.List;\n");
         controllerWriter.write("\n");
 
@@ -53,8 +57,6 @@ public class ControllerUtil {
         // 設定 @Autowired
         controllerWriter.write("    @Autowired\n");
         controllerWriter.write("    private " + entityName + "Service " + toCamelCase(entityName, false) + "Service;\n");
-        controllerWriter.write("    @Autowired\n");
-        controllerWriter.write("    private " + entityName + "Repository " + toCamelCase(entityName, false) + "Repository;\n");
         controllerWriter.write("\n");
 
         // 設定 主鍵
@@ -96,7 +98,7 @@ public class ControllerUtil {
         controllerWriter.write("               operationId = \"update\")\n");
         controllerWriter.write("    @PostMapping(\"/update\")\n");
         controllerWriter.write("    public ResponseEntity<Void> update(@RequestBody " + entityName + "." + entityName + "Update entityUpdate) {\n");
-        controllerWriter.write("        " + entityName.toLowerCase() + "Repository.update(entityUpdate.get" + capitalize(entityName) + "Ori(), entityUpdate.get" + capitalize(entityName) + "New());\n");
+        controllerWriter.write("        " + entityName.toLowerCase() + "Service.update(entityUpdate.get" + capitalize(entityName) + "Ori(), entityUpdate.get" + capitalize(entityName) + "New());\n");
         controllerWriter.write("        return ResponseEntity.ok().build();\n");
         controllerWriter.write("    }\n\n");
 
@@ -115,9 +117,6 @@ public class ControllerUtil {
             } else {
                 controllerWriter.write("        " + entityName + " entity = " + entityName.toLowerCase() + "Service.findById(id);\n");
             }
-            controllerWriter.write("        if (entity == null) {\n");
-            controllerWriter.write("            return ResponseEntity.ok(null); // 回傳 HTTP 200 OK 且 資料為 null\n");
-            controllerWriter.write("        }\n");
             controllerWriter.write("        return ResponseEntity.ok(entity);  // 回傳 HTTP 200 OK 和資料\n");
             controllerWriter.write("    }\n\n");
         } else {
