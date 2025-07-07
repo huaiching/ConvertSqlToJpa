@@ -33,6 +33,9 @@ public class ServiceUtil {
                 .map(f -> f[1])
                 .orElse("Integer");
 
+        serviceWriter.write("package " + BasicUtil.getProjectPath() + ".service;\n");
+        serviceWriter.write("\n");
+        serviceWriter.write("import " + BasicUtil.getProjectPath() + ".entity." + entityName + ";\n");
         serviceWriter.write("import java.util.List;\n");
         serviceWriter.write("\n");
         serviceWriter.write("public interface " + entityName + "Service {\n");
@@ -64,6 +67,15 @@ public class ServiceUtil {
         serviceWriter.write("     * @return 儲存後的實體物件清單\n");
         serviceWriter.write("     */\n");
         serviceWriter.write("    List<" + entityName + "> saveAll(List<" + entityName + "> entityList);\n\n");
+
+        // update 方法
+        serviceWriter.write("    /**\n");
+        serviceWriter.write("     * 根據 變更前後資料 單筆更新 " + entityName.toLowerCase() + "\n");
+        serviceWriter.write("     * @param entityOri 變更前的 " + entityName.toLowerCase() + "\n");
+        serviceWriter.write("     * @param entityNew 變更後的 " + entityName.toLowerCase() + "\n");
+        serviceWriter.write("     */\n");
+        serviceWriter.write("    void update(" + entityName + " entityOri, " + entityName + " entityNew);\n");
+
 
         // findById 方法
         if (primaryKeyExists) {
@@ -116,9 +128,14 @@ public class ServiceUtil {
                 .map(f -> f[1])
                 .orElse("Integer");
 
+        implWriter.write("package " + BasicUtil.getProjectPath() + ".service.impl;\n");
+        implWriter.write("\n");
         implWriter.write("import org.springframework.stereotype.Service;\n");
         implWriter.write("import org.springframework.beans.factory.annotation.Autowired;\n");
         implWriter.write("import org.springframework.transaction.annotation.Transactional;\n");
+        implWriter.write("import " + BasicUtil.getProjectPath() + ".entity." + entityName + ";\n");
+        implWriter.write("import " + BasicUtil.getProjectPath() + ".repository." + entityName + "Repository;\n");
+        implWriter.write("import " + BasicUtil.getProjectPath() + ".service." + entityName + "Service;\n");
         implWriter.write("import java.util.*;\n");
         implWriter.write("\n");
         implWriter.write("@Service\n");
@@ -163,6 +180,19 @@ public class ServiceUtil {
         implWriter.write("    public List<" + entityName + "> saveAll(List<" + entityName + "> entityList) {\n");
         implWriter.write("        return " + entityName.toLowerCase() + "Repository.saveAll(entityList);\n");
         implWriter.write("    }\n\n");
+
+        // update 方法
+        implWriter.write("    /**\n");
+        implWriter.write("     * 根據 變更前後資料 單筆更新 " + entityName.toLowerCase() + "\n");
+        implWriter.write("     * @param entityOri 變更前的 " + entityName.toLowerCase() + "\n");
+        implWriter.write("     * @param entityNew 變更後的 " + entityName.toLowerCase() + "\n");
+        implWriter.write("     */\n");
+        implWriter.write("    @Override\n");
+        implWriter.write("    @Transactional\n");
+        implWriter.write("    public void update(" + entityName + " entityOri, " + entityName + " entityNew) {\n");
+        implWriter.write("        " + entityName.toLowerCase() + "Repository.update(entityOri, entityNew);\n");
+        implWriter.write("    }\n\n");
+
 
         // findById 方法實作
         if (primaryKeyExists) {
