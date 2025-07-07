@@ -27,6 +27,10 @@ public class EntityUtil {
         File entityFile = new File("file/output/entity/" + entityName + ".java");
         BufferedWriter entityWriter = new BufferedWriter(new FileWriter(entityFile));
 
+        // 建立 package
+        entityWriter.write("package " + BasicUtil.getProjectPath() + ".entity;\n");
+        entityWriter.write("\n");
+
         // 寫入 Entity 類別需要的 import 依賴
         entityWriter.write("import javax.persistence.Entity;\n");
         entityWriter.write("import javax.persistence.Id;\n");
@@ -207,13 +211,13 @@ public class EntityUtil {
         entityWriter.write("            return " + entityName.toLowerCase() + "Ori;\n");
         entityWriter.write("        }\n\n");
         entityWriter.write("        public void set" + capitalize(entityName) + "Ori(" + entityName + " " + entityName.toLowerCase() + "Ori) {\n");
-        entityWriter.write("            this." + entityName.toLowerCase() + "Ori = " + entityName.toLowerCase() + "Ori;\n");
+        entityWriter.write("            " + entityName.toLowerCase() + "Ori = " + entityName.toLowerCase() + "Ori;\n");
         entityWriter.write("        }\n\n");
         entityWriter.write("        public " + entityName + " get" + capitalize(entityName) + "New() {\n");
         entityWriter.write("            return " + entityName.toLowerCase() + "New;\n");
         entityWriter.write("        }\n\n");
         entityWriter.write("        public void set" + capitalize(entityName) + "New(" + entityName + " " + entityName.toLowerCase() + "New) {\n");
-        entityWriter.write("            this." + entityName.toLowerCase() + "New = " + entityName.toLowerCase() + "New;\n");
+        entityWriter.write("            " + entityName.toLowerCase() + "New = " + entityName.toLowerCase() + "New;\n");
         entityWriter.write("        }\n\n");
         entityWriter.write("    }\n");
 
