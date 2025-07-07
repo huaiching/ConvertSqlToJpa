@@ -1,9 +1,31 @@
 package utils;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
 /**
  * 設定共用方法
  */
 public class BasicUtil {
+
+    public static String getProjectPath() {
+        String projectPath = "";
+        try {
+            File file = new File("file/project_path.txt");
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String pathLine;
+            while ((pathLine = reader.readLine()) != null) {
+                if (!pathLine.trim().isEmpty()) {
+                    projectPath = pathLine.trim();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return projectPath;
+    }
 
     /**
      * 將字串轉換為駝峰式命名規範（Camel Case）
