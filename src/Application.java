@@ -12,7 +12,7 @@ import static utils.ServiceUtil.generateServiceInterface;
 public class Application {
     public static void main(String[] args) {
         try {
-            File inputFile = new File("file/input.txt");
+            File inputFile = new File("file/create_sql.txt");
             File pkFile = new File("file/primary_keys.txt");
 
             // 生成 共用資料夾
