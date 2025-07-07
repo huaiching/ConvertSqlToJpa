@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Set;
 
 import static utils.BasicUtil.capitalize;
-import static utils.BasicUtil.toCamelCase;
 
 /**
  * 產生 repository 的相關方法
@@ -33,7 +32,10 @@ public class RepositoryUtil {
                 .map(f -> f[1])
                 .orElse("Integer");
 
+        repoWriter.write("package " + BasicUtil.getProjectPath() + ".repository;\n");
+        repoWriter.write("\n");
         repoWriter.write("import org.springframework.data.jpa.repository.JpaRepository;\n");
+        repoWriter.write("import " + BasicUtil.getProjectPath() + ".entity." + entityName + ";\n");
         repoWriter.write("\n");
         repoWriter.write("public interface " + entityName + "Repository extends JpaRepository<" + entityName + ", " + primaryKeyType + ">, " + entityName + "CustomRepository{\n");
         repoWriter.write("}\n");
@@ -41,10 +43,15 @@ public class RepositoryUtil {
         repoWriter.close();
         System.out.println("生成 Repository 檔案，位於 " + "file/output/repository/" + entityName + "Repository.java");
 
+
+
         // 複雜 SQL
         File repoCustomFile = new File("file/output/repository/" + entityName + "CustomRepository.java");
         BufferedWriter repoCustomWriter = new BufferedWriter(new FileWriter(repoCustomFile));
 
+        repoCustomWriter.write("package " + BasicUtil.getProjectPath() + ".repository;\n");
+        repoCustomWriter.write("\n");
+        repoCustomWriter.write("import " + BasicUtil.getProjectPath() + ".entity." + entityName + ";\n");
         repoCustomWriter.write("\n");
         repoCustomWriter.write("public interface " + entityName + "CustomRepository {\n");
 
@@ -82,11 +89,16 @@ public class RepositoryUtil {
                 .map(f -> f[1])
                 .orElse("Integer");
 
+        implWriter.write("package " + BasicUtil.getProjectPath() + ".repository.impl;\n");
+        implWriter.write("\n");
         implWriter.write("import org.springframework.stereotype.Repository;\n");
         implWriter.write("import org.springframework.beans.factory.annotation.Autowired;\n");
         implWriter.write("import org.springframework.transaction.annotation.Transactional;\n");
         implWriter.write("import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;\n");
         implWriter.write("import java.util.*;\n");
+        implWriter.write("\n");
+        implWriter.write("import " + BasicUtil.getProjectPath() + ".entity." + entityName + ";\n");
+        implWriter.write("import " + BasicUtil.getProjectPath() + ".repository." + entityName + "CustomRepository;\n");
         implWriter.write("\n");
         implWriter.write("@Repository\n");
         implWriter.write("public class " + entityName + "CustomRepositoryImpl implements " + entityName + "CustomRepository {\n");
